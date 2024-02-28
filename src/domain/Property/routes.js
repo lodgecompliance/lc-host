@@ -2,7 +2,6 @@ import PropertyList from './Views/List.vue';
 import PropertyShow from './Views/Show.vue';
 import PropertyReservation from './Views/Reservation.vue';
 import PropertySettings from './Views/Settings.vue'
-import PropertyRemotelockConnectCallback from './Views/RemotelockConnectCallback.vue'
 import PropertyNotifications from "@/domain/Property/Views/Notifications.vue";
 import ReservationCreate from "@/domain/Reservation/Views/Create.vue";
 import ZapierOauth from "@/domain/Property/Views/ZapierOauth.vue";
@@ -14,14 +13,6 @@ export default [
         path: '/properties',
         name: 'property.list',
         component: PropertyList,
-        meta: {
-            requiresAuth: true,
-        },
-    },
-    {
-        path: '/callback/remote-lock',
-        name: 'property.remotelock.callback',
-        component: PropertyRemotelockConnectCallback,
         meta: {
             requiresAuth: true,
         },

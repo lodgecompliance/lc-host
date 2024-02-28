@@ -302,8 +302,10 @@ export default {
           href: config.app.authDomain,
           target: '_blank',
           render: true,
-        },
-        {
+        }
+      ]
+      if(this.activeProperty.id) {
+        items.push({
           title: 'Notifications',
           icon: 'mdi-bell',
           route: {
@@ -317,8 +319,8 @@ export default {
           } : undefined,
           render: true,
           router: true,
-        },
-      ]
+        })
+      }
       if(this.hasAnyProperty) {
         items = items.concat([
           {

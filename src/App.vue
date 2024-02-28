@@ -23,7 +23,7 @@
       <template v-if="mode === 'host'">
         <property-switch class="ml-2" />
         <v-btn
-            v-if="$vuetify.breakpoint.mdAndUp"
+            v-if="current_user.property && $vuetify.breakpoint.mdAndUp"
             :disabled="!current_user.property.active"
             class="mx-2"
             color="primary"
@@ -43,12 +43,13 @@
     <!-- Sizes your content based upon application components -->
     <v-main v-if="app_ready">
       <reservation-form-dialog
+          v-if="current_user.property"
           :property="current_user.property"
           ref="createReservation"
       />
       <router-view v-if="!auth_required"></router-view>
       <v-btn
-          v-if="mode === 'host' && $vuetify.breakpoint.mdAndDown"
+          v-if="mode === 'host' && current_user.property  && $vuetify.breakpoint.mdAndDown"
           :disabled="!current_user.property.active"
           color="primary"
           dark
@@ -201,7 +202,7 @@ export default {
           this.SET_APP_STATE(!!this.auth.token && !!this.current_user.profile);
           this.syncAuthUser()
           .then(() => {
-            this.SET_APP_STATE(!!this.current_user.profile)
+            this.SET_APP_STATE(!!this.current_user.profile);
           })
           .catch(e => {
             if(this.updateExists) this.refreshApp();

@@ -5,7 +5,7 @@
         item-text="name"
         item-value="id"
         dense
-        :value="current_user.property.id"
+        :value="current_user.property ? current_user.property.id : null"
         @change="switchProperty"
         outlined
         label="Properties"

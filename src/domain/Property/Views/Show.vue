@@ -7,13 +7,10 @@
         <template #header>
           <slot name="header" />
         </template>
-        <data-container :loading="loading">
-            <template v-slot:loading>
-                <property-skeleton />
-            </template>
+        <data-container :loading="loading" :error="error" @retry="getProperty">
             <v-container v-if="!property">
                 <div class="text-center grey--text">
-                    <h4>We could not find that property</h4>
+                    <p>We could not find that property</p>
                 </div>
             </v-container>
             <slot v-else v-bind="property">
@@ -52,18 +49,17 @@ import { mapActions, mapMutations, mapGetters } from 'vuex';
 
 import AppLayer from '@/AppLayer';
 import DataContainer from '../../../components/DataContainer.vue';
-import PropertySkeleton from '../Components/PropertySkeleton.vue';
-
 import GET_PROPERTY from '../Queries/getProperty';
 
 export default {
     name: 'Property',
     components: {
-        AppLayer, DataContainer, PropertySkeleton
+        AppLayer, DataContainer
     }, 
     data(){
         return {
             loading: false,
+            error: null,
             property: null,
         }
     },
@@ -111,22 +107,17 @@ export default {
                 }
             })
             .then(response => {
-                this.property = response.data.getPropertyById;
-                if(this.property) {
-                  const propertyInAuth = this.properties.find(p => p.id === this.property.id);
+                const property = response.data.getPropertyById;
+                if(property) {
+                  const propertyInAuth = this.properties.find(p => p.id === property.id);
                   if(propertyInAuth) {
                     this.SET_ACTIVE_PROPERTY(propertyInAuth);
                     this.SET_MODE('host');
+                    this.property = property;
                   }
                 }
             })
-            .catch(e => {
-                this.$refs.app.toastError({
-                    message: `Could not get property.`,
-                    retry: () => this.getProperty(),
-                    exception: e
-                });
-            })
+            .catch(e => this.error = e)
             .finally(() => {
                 this.loading = false;
             })

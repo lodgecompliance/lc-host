@@ -1,63 +1,66 @@
 <template>
-    <div>
-        <v-sheet class="pa-2 rounded-b-0" rounded elevation="0">
-           <v-row tile class="d-flex">
-                <v-col v-if="view === 'Table'" cols="12" sm="3" class="py-0">
-                    <v-text-field
-                        v-model="search"
-                        append-icon="mdi-magnify"
-                        label="Search"
-                        outlined
-                        dense
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="12" :sm="view === 'Table' ? 6 : 8" class="py-0">
-                  <reservation-status-filter
-                    :includes="includes"
-                    label="Status filter"
-                    multiple
-                    small-chips
-                    v-model="statusFilter"
-                    outlined
-                    dense
-                  />
-                </v-col>
-                <v-spacer></v-spacer>
-                <v-col cols="12" :sm="view === 'Table' ? 3 : 4" class="py-0">
-                    <v-select
-                        v-model="view"
-                        :items="views"
-                        dense
-                        outlined
-                        hide-details
-                        label="View"
-                    ></v-select>
-                </v-col>
-            </v-row>
-            <div class="d-flex justify-end align-content-center">
-              <v-checkbox
-                  v-for="archive in archives" :key="archive.value"
-                  v-model="includes"
-                  :value="archive.value"
-                  multiple dense
-                  :label="archive.label"
-                  class="my-0 mx-2"
-              />
-            </div>
-          </v-sheet>
-        <data-container :loading="loading" :error="error" @retry="getPropertyReservations" >
-            <template v-if="view === 'Table'" #loading>
-                <v-skeleton-loader :type="view.toLowerCase()" />
-            </template>
-            <component
-                :is="`property-reservations-${view}`"
-                :reservations="items"
-                :search="search"
-                @reservation-updated="reservationUpdated"
-                @reservation-deleted="reservationDeleted"
-            ></component>
-        </data-container>
-    </div>
+  <div v-if="property">
+      <v-sheet class="pa-2 rounded-b-0" rounded elevation="0">
+         <v-row tile class="d-flex">
+              <v-col v-if="view === 'Table'" cols="12" sm="3" class="py-0">
+                  <v-text-field
+                      v-model="search"
+                      append-icon="mdi-magnify"
+                      label="Search"
+                      outlined
+                      dense
+                  ></v-text-field>
+              </v-col>
+              <v-col cols="12" :sm="view === 'Table' ? 6 : 8" class="py-0">
+                <reservation-status-filter
+                  :includes="includes"
+                  label="Status filter"
+                  multiple
+                  small-chips
+                  v-model="statusFilter"
+                  outlined
+                  dense
+                />
+              </v-col>
+              <v-spacer></v-spacer>
+              <v-col cols="12" :sm="view === 'Table' ? 3 : 4" class="py-0">
+                  <v-select
+                      v-model="view"
+                      :items="views"
+                      dense
+                      outlined
+                      hide-details
+                      label="View"
+                  ></v-select>
+              </v-col>
+          </v-row>
+          <div class="d-flex justify-end align-content-center">
+            <v-checkbox
+                v-for="archive in archives" :key="archive.value"
+                v-model="includes"
+                :value="archive.value"
+                multiple dense
+                :label="archive.label"
+                class="my-0 mx-2"
+            />
+          </div>
+        </v-sheet>
+      <data-container :loading="loading" :error="error" @retry="getPropertyReservations" >
+          <template v-if="view === 'Table'" #loading>
+              <v-skeleton-loader :type="view.toLowerCase()" />
+          </template>
+          <component
+              :is="`property-reservations-${view}`"
+              :reservations="items"
+              :search="search"
+              @reservation-updated="reservationUpdated"
+              @reservation-deleted="reservationDeleted"
+          ></component>
+      </data-container>
+  </div>
+  <div v-else class="text-center py-5 grey--text">
+    <p>Select a property</p>
+  </div>
 </template>
 <script>
 
@@ -90,6 +93,7 @@ export default {
         }
     },
     computed: {
+
         property() {
             return this.$store.getters.current_user.property
         },
@@ -120,7 +124,7 @@ export default {
             this.$store.dispatch('query', {
                 query: GET_PROPERTY_RESERVATIONS,
                 variables: {
-                    id: this.$store.getters.current_user.property.id,
+                    id: this.property.id,
                     includes: this.includes
                 }
             }).then(response => {
@@ -158,8 +162,8 @@ export default {
     watch: {
       property: {
         immediate: true,
-        handler() {
-          this.getPropertyReservations()
+        handler(property) {
+          if(property) this.getPropertyReservations()
         }
       },
       statusFilter: {
