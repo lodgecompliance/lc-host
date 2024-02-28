@@ -31,16 +31,6 @@ export default {
         client_key: process.env.VUE_APP_GRAPHQL_CLIENT_KEY
     },
 
-    stripe: {
-        publishable_key: process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY,
-        secret_key: process.env.VUE_APP_STRIPE_SECRET_KEY,
-        client_id: process.env.VUE_APP_STRIPE_CLIENT_ID
-    },
-
-    remote_lock: {
-        client_id: process.env.VUE_APP_REMOTE_LOCK_CLIENT_ID
-    },
-
     intercom: {
         app_id: process.env.VUE_APP_INTERCOM_APP_ID,
         secret_key: process.env.VUE_APP_INTERCOM_SECRET_KEY,
