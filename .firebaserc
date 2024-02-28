@@ -8,7 +8,7 @@
       "hosting": {
         "lc": [
           "lc-host-staging"
-        ],
+        ]
       }
     },
     "guest-registration-prod": {
