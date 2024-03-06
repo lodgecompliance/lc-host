@@ -206,7 +206,7 @@ export default {
           })
           .catch(e => {
             if(this.updateExists) this.refreshApp();
-            else this.error = e.message;
+            else this.error = e
           })
           .finally(() => {
               this.bootIntercom();

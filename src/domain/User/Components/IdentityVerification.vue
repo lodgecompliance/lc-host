@@ -43,7 +43,7 @@ export default {
     }
   },
   props: {
-    userId: Object
+    userId: String
   },
   computed: {},
   methods: {

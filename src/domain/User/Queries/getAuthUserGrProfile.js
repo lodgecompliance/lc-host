@@ -82,8 +82,10 @@ export default gql`
                     title
                     text
                     time
-                    timestamp
                     read_at
+                    timestamp {
+                        created_at
+                    }
                     metadata {
                         key
                         value
