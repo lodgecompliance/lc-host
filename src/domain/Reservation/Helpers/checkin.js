@@ -1,9 +1,9 @@
 export  default class Checkin {
 
     constructor(checkin = {}) {
-        this.payments = checkin ? checkin.payments : null;
-        this.agreements = checkin && checkin.checkin ? checkin.checkin.agreements : null;
-        this.questions = checkin && checkin.checkin ? checkin.checkin.questions : null;
+        this.payments = checkin?.payments;
+        this.agreements = checkin?.agreements;
+        this.questions = checkin?.questions;
     }
 
     getChargeStripePayment(charge) {

@@ -20,7 +20,7 @@
           <v-text-field
               outlined dense
               label="Amount"
-              :prefix="property.default_currency"
+              :prefix="property.currency"
               type="number"
               :rules="[rules.required, (value) => value > 0 || 'Enter a valid amount']"
               v-model="form.amount"

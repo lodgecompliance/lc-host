@@ -52,7 +52,7 @@
             this.query( {
               domain: config.apollo.account,
               query: gql`
-                query getBusinessIntegration($business_id: ID!, $integration_id: ID) {
+                query getBusinessIntegration($business_id: ID!, $integration_id: ID!) {
                     getBusinessIntegration(business_id: $business_id, integration_id: $integration_id,) {
                         id
                         title

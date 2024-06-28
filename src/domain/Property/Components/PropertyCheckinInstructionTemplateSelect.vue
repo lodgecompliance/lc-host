@@ -63,7 +63,7 @@ export default {
             this.$store.dispatch('query', {
                 query: GET_PROPERTY_CHECKIN_INSTRUCTION_TEMPLATES,
                 variables: {
-                    property_id: this.property.id
+                    id: this.property.id
                 }
             })
             .then(response => {

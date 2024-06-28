@@ -11,7 +11,7 @@ export default {
         })
 
         Vue.filter('money', (amount, currency = '') => {
-            return isNaN(amount) ? '--' : `${currency ? currency.toUpperCase() : ''}${amount.toLocaleString()}`;
+            return isNaN(amount) ? '--' : `${currency ? currency.toUpperCase() + amount.toLocaleString() : ''}`;
         })
 
         Vue.filter('replace_underscore', (string, replacement = ' ') => {

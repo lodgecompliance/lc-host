@@ -341,7 +341,7 @@ export default {
       return this.reservation?.checkin?.verification
     },
     checkinSignature() {
-      return this.reservation?.checkin?.checkin?.signature
+      return this.reservation?.checkin?.signature
     }
   },
   methods: {
@@ -442,9 +442,7 @@ export default {
 
               #checkin start
                 checkin {
-                  checkin {
-                    signature
-                  }
+                  signature
                 }
               }
            }

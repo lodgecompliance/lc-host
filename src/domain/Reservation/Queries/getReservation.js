@@ -64,7 +64,9 @@ export default gql`
                 email
                 phone
                 image
-                address     
+                address 
+                currency
+                payment_integrations    
             }
             user {
                 id
@@ -85,6 +87,7 @@ export default gql`
                     email
                     first_name
                     last_name
+                    full_name
                     image
                 }
                 info {

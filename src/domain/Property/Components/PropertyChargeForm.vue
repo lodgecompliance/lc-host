@@ -133,7 +133,7 @@
         </v-card-text>
         <v-card-actions>
             <v-btn text color="red" @click="$emit('cancel')">Cancel</v-btn>
-            <v-btn type="submit" color="primary" :loading="loading" depressed>Save Charge</v-btn>
+            <v-btn type="submit" color="primary" :loading="loading" @click="submit" depressed>Save Charge</v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -269,7 +269,7 @@ export default {
                 if(charge) {
                     this.form = {
                         ...charge,
-                        currency: charge.currency ? charge.currency : this.property.default_currency,
+                        currency: charge.currency || this.property.currency,
                         unit: charge.unit ? charge.unit : this.units[0].value,
                         multipliers: charge.multipliers ? charge.multipliers : []
                     }
@@ -281,7 +281,7 @@ export default {
                         amount: null,
                         type: 'instant',
                         optional: false,
-                        currency: this.property.default_currency,
+                        currency: this.property.currency,
                         unit: this.units[0].value,
                         multipliers: []
                     }
@@ -295,7 +295,7 @@ export default {
                 if(charge){
                     this.form = {
                         ...charge,
-                        currency: charge.currency ? charge.currency : this.property.default_currency,
+                        currency: charge.currency || this.property.currency,
                         unit: charge.unit ? charge.unit : this.units[0].value,
                         multipliers: charge.multipliers ? charge.multipliers : []
                     }

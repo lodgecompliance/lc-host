@@ -395,7 +395,7 @@ export default {
                 }
             } else {
                 this.form = {
-                    currency: this.property.default_currency,
+                    currency: this.property.currency,
                     instruction: null,
                     charges: [] ,
                     agreements: [],

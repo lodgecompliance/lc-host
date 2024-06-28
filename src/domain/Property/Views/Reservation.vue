@@ -23,9 +23,9 @@
             <v-card-text>
               <data-container :loading="loading">
 
-                <template v-slot:loading>
-                    <reservation-skeleton />
-                </template>
+<!--                <template v-slot:loading>-->
+<!--                    <reservation-skeleton />-->
+<!--                </template>-->
 
                 <template v-if="property">
                   <div class="d-flex align-center pb-3">
@@ -140,9 +140,7 @@
 import { mapActions } from 'vuex';
 import gql from 'graphql-tag';
 
-import AppLayer from '@/AppLayer';
 import DataContainer from '../../../components/DataContainer.vue';
-import ReservationSkeleton from '../../Reservation/Components/ReservationSkeleton';
 import ReservationForm from '../../Reservation/Components/ReservationForm.vue';
 import PropertyReservationCheckin from '../../Reservation/Widgets/PropertyReservationCheckin';
 import ClipBoard from '../../../components/Utilities/ClipBoard';
@@ -168,7 +166,7 @@ export default {
     ReservationSessions,
     ReservationHostOptions,
     ReservationTimeline,
-    DataContainer, ReservationSkeleton,  ReservationForm,
+    DataContainer,  ReservationForm,
     PropertyReservationCheckin, ClipBoard, SendMessage,
     ConvertToPdf
   }, 

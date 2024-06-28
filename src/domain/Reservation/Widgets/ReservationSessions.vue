@@ -75,7 +75,11 @@
             </div>
           </v-img>
           <v-card-text>
-            <reservation-session :session="current" />
+            <reservation-session
+                v-if="current"
+                :reservation="reservation"
+                :id="current.id"
+            />
           </v-card-text>
         </v-card>
       </v-dialog>

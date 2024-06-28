@@ -39,7 +39,7 @@
     </v-card-text>
     <v-card-actions>
         <v-btn text color="red" @click="$emit('cancel')">Cancel</v-btn>
-        <v-btn color="primary" :loading="loading" @click="submit">Save Agreement</v-btn>
+        <v-btn color="primary" :loading="loading" @click="submit" depressed>Save Agreement</v-btn>
     </v-card-actions>
   </v-card>
 </template>

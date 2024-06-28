@@ -88,7 +88,7 @@
                 <h4>Credit card</h4>
               </v-expansion-panel-header>
               <v-expansion-panel-content class="pt-3">
-                <template v-if="checkin.checkin.credit_card">
+                <template v-if="checkin.credit_card">
 
                   <template v-if="creditCard.stripe" >
                     <stripe-credit-card v-if="creditCard.stripe.card"
@@ -470,13 +470,13 @@ export default {
     computed: {
 
       agreements() {
-        return this.checkin?.checkin.agreements || []
+        return this.checkin?.agreements || []
       },
       creditCard() {
-        return this.checkin?.checkin.credit_card || {}
+        return this.checkin?.credit_card || {}
       },
       questions() {
-        return this.checkin?.checkin.questions || []
+        return this.checkin?.questions || []
       },
 
       user(){

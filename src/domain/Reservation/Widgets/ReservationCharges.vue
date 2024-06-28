@@ -78,9 +78,8 @@ export default {
             return this.charges.concat(this.attachments)
         },
         currency() {
-            return this.reservation.currency ? this.reservation.currency : this.property.default_currency;
+            return this.reservation.currency ? this.reservation.currency : this.property.currency;
         },
-
         stripePayments() {
             return this.payments && this.payments.stripe ? this.payments.stripe : [];
         },

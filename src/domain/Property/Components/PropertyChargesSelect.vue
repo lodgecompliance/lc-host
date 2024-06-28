@@ -72,7 +72,7 @@
               :prefill="{
                         type: 'instant',
                         enable: true,
-                        currency: allowedCurrency ? allowedCurrency : property.default_currency,
+                        currency: allowedCurrency ? allowedCurrency : property.currency,
                         }"
               :read-only="newChargeReadOnly"
               class="mt-2" >
