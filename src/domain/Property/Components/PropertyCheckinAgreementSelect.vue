@@ -119,11 +119,11 @@ export default {
             this.$store.dispatch('query', {
                 query: GET_PROPERTY_CHECKIN_AGREEMENTS,
                 variables: {
-                    property_id: this.property.id
+                    id: this.property.id
                 }
             })
             .then(response => {
-                this.items = response.data.getPropertyCheckinAgreements ? response.data.getPropertyCheckinAgreements  : []
+                this.items = response?.data?.getPropertyById?.checkin_agreements || []
             })
             .finally(() => {
                 this.loading = false;

@@ -1,10 +1,5 @@
 <template>
-    <v-card flat>
-        <v-card-title v-if="header" class="headline">
-            <span>Payments</span>
-        </v-card-title>
-        <v-card-text class="px-1">
-            <data-container :loading="loading">
+    <data-container :loading="loading" :error="error" @retry="getPayments">
                 <template #loading>
                     <v-skeleton-loader
                     v-for="i in 4" :key="i"
@@ -102,21 +97,17 @@
                 <div v-else class="py-5 grey--text text-center">
                     No payment for the reservation with the card
                 </div>
+              <template v-if="reservation.approved && reservation.active">
+                <v-btn
+                    :loading="refunding"
+                    v-if="canRefund && outstandingStripeCharges.length && outstandingStripeChargesTotal > 0"
+                    color="primary" text depressed
+                    @click="refundOutstandingCharges">
+                  Refund all outstanding charges - {{ outstandingStripeCharges[0].currency.toUpperCase() }}
+                  {{ outstandingStripeChargesTotal / 100 }}
+                </v-btn>
+              </template>
             </data-container>
-        </v-card-text>
-        <v-card-actions
-            v-if="reservation.approved && reservation.active"
-        >
-          <v-btn
-              :loading="refunding"
-              v-if="canRefund && outstandingStripeCharges.length && outstandingStripeChargesTotal > 0"
-              color="primary" text depressed
-              @click="refundOutstandingCharges">
-            Refund all outstanding charges - {{ outstandingStripeCharges[0].currency.toUpperCase() }}
-            {{ outstandingStripeChargesTotal / 100 }}
-          </v-btn>
-        </v-card-actions>
-    </v-card>
 </template>
 
 <script>
@@ -138,6 +129,7 @@ export default
     data(){
         return {
             dialog: false,
+            error: null,
             selectedPaymentDialog: false,
             loading: false,
             selected: null,
@@ -220,12 +212,7 @@ export default
                 this.dataPayment = response.data.getReservationPayments;
             })
             .catch(e => {
-                this.$store.commit('TOAST_ERROR', {
-                    show: true,
-                    message: `Could not get payments.`,
-                    retry: () => this.getPayments(),
-                    exception: e
-                });
+              this.error = e;
             })
             .finally(() => {
                 this.loading = false;

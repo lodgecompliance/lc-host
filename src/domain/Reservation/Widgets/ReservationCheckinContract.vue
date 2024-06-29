@@ -16,6 +16,7 @@
                 :reservation="reservation"
                 :property="property"
                 :checkin="checkin"
+                :user="reservation.user"
                 />
             </v-card-text>
             <v-card-actions >

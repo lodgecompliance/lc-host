@@ -58,6 +58,7 @@ export default {
     data(){
         return {
             loading: false,
+            error: null,
             charges: [],
             selectedCharges: [],
             totalInstantCharges: 0,
@@ -118,8 +119,6 @@ export default {
     },
     
     methods: {
-
-
         getCharges(){
             this.charges = [];
             if(this.reservation.balance && this.reservation.currency){

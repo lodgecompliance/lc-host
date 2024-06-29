@@ -171,11 +171,11 @@ export default {
             this.$store.dispatch('query', {
                 query: GET_PROPERTY_CHECKIN_QUESTIONS,
                 variables: {
-                    property_id: this.property.id
+                    id: this.property.id
                 }
             })
             .then(response => {
-                this.items = response.data.getPropertyCheckinQuestions ? response.data.getPropertyCheckinQuestions  : []
+                this.items = response?.data?.getPropertyById?.checkin_questions || []
             })
             .finally(() => {
                 this.loading = false;

@@ -18,11 +18,10 @@
           No information available
         </div>
         <template v-if="checkin">
-          <h4>Checkin</h4>
           <reservation-checkin
               :reservation="reservation"
-              :property="reservation.property"
               :checkin="checkin"
+              :user="session.user"
           />
         </template>
       </v-col>

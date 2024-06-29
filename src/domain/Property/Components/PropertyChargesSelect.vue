@@ -164,14 +164,11 @@ export default {
             this.$store.dispatch('query', {
                 query: GET_PROPERTY_CHARGES,
                 variables: {
-                    property_id: this.property.id
+                    id: this.property.id
                 }
             })
             .then(response => {
-                this.items = response.data.getPropertyCharges.map( charge => {
-                            delete charge.__typename;
-                            return charge
-                        })
+                this.items = response?.data?.getPropertyById?.charges || [];
             })
             .finally(() => {
                 this.loading = false;

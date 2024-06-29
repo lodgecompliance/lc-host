@@ -67,7 +67,7 @@ export default {
                 }
             })
             .then(response => {
-                this.items = response.data.getPropertyCheckinInstructionTemplates
+                this.items = response?.data?.getPropertyById?.checkin_instructions || []
             })
             .finally(() => {
                 this.loading = false;

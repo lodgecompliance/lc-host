@@ -5,14 +5,21 @@
         width="400"
         scrollable
     >
-      <reservation-payments
-          ref="payments"
-          :reservation="reservation"
-          :property="property ? property : reservation.property"
-          :can-refund="hasPermissionToManageCharge"
-          :can-capture="hasPermissionToManageCharge"
-          @charges-refunded="chargesRefunded"
-      />
+      <v-card flat>
+        <v-card-title class="headline">
+          <span>Payments</span>
+        </v-card-title>
+        <v-card-text class="px-1">
+          <reservation-payments
+              ref="payments"
+              :reservation="reservation"
+              :property="property ? property : reservation.property"
+              :can-refund="hasPermissionToManageCharge"
+              :can-capture="hasPermissionToManageCharge"
+              @charges-refunded="chargesRefunded"
+          />
+        </v-card-text>
+      </v-card>
     </v-dialog>
     <v-menu v-if="reservation.host_actions.length"
             origin="center center"

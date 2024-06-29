@@ -6,30 +6,30 @@
         <reservation-details :reservation="reservation" />
       </section>
 
-<!--      <section class="my-2" >-->
-<!--        <h4 class="headline">Agreements</h4>-->
-<!--        <template v-if="agreements && agreements.length">-->
-<!--          <v-list>-->
-<!--            <v-list-item v-for="(agreement, i) in agreements" :key="i">-->
-<!--              <v-list-item-icon>-->
-<!--                <v-icon>mdi-handshake</v-icon>-->
-<!--              </v-list-item-icon>-->
-<!--              <v-list-item-content>-->
-<!--                <v-list-item-title>-->
-<!--                  {{ agreement.agreement }}-->
-<!--                </v-list-item-title>-->
-<!--                <div  v-if="agreement.text">{{ agreement.text }}</div>-->
-<!--                <div  v-if="agreement.link && agreement.link !== ''">-->
-<!--                  <a :href="agreement.link" target="_blank">{{agreement.link}}</a>-->
-<!--                </div>-->
-<!--              </v-list-item-content>-->
-<!--            </v-list-item>-->
-<!--          </v-list>-->
-<!--        </template>-->
-<!--        <template v-else>-->
-<!--          <p class="grey&#45;&#45;text py-3">No agreement</p>-->
-<!--        </template>-->
-<!--      </section>-->
+      <section class="my-2" >
+        <h4 class="headline">Agreements</h4>
+        <template v-if="agreements && agreements.length">
+          <v-list>
+            <v-list-item v-for="(agreement, i) in agreements" :key="i">
+              <v-list-item-icon>
+                <v-icon>mdi-handshake</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ agreement.agreement }}
+                </v-list-item-title>
+                <div  v-if="agreement.text">{{ agreement.text }}</div>
+                <div  v-if="agreement.link && agreement.link !== ''">
+                  <a :href="agreement.link" target="_blank">{{agreement.link}}</a>
+                </div>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </template>
+        <template v-else>
+          <p class="grey--text py-3">No agreement</p>
+        </template>
+      </section>
 
       <section class="my-2">
         <h4 class="headline">Questions</h4>
@@ -81,24 +81,27 @@
       </section>
 
       <section class="my-2">
-        <h4 class="headline">Charges</h4>
-        <reservation-charges
-            :reservation="reservation"
+        <h4 class="headline">Payments</h4>
+        <reservation-payments
+            outlined
             :property="property"
-            :_payments="checkin.payments"
+            :reservation="reservation"
+            :user-id="user.id"
+            :can-refund="hasPermissionToManageCharge"
+            :can-capture="hasPermissionToManageCharge"
         />
       </section>
 
       <section v-if="reservation.require_id_verification" class="my-2">
         <h4 class="headline">ID Verification</h4>
         <user-identity-verification
-            :user-id="reservation.user_id"
+            :user-id="user.id"
         />
       </section>
       <section class="my-2">
         <h4 class="headline">Signature</h4>
         <signature-pad
-            :signature="checkin.signature"
+            :signature="signature"
             :editable="false"
             :activate="true"
         />
@@ -108,24 +111,26 @@
 
 <script>
     import ReservationDetails from '../Components/ReservationDetails.vue';
-    import ReservationCharges from './ReservationCharges.vue';
     import StripeCreditCard from '../../../components/Utilities/StripeCreditCard.vue';
     import StripePaymentMethod from '../../../components/Utilities/StripePaymentMethod.vue';
     import UserIdentityVerification from '../../User/Components/IdentityVerification.vue';
     import SignaturePad from '../../../components/Utilities/SignaturePad.vue';
     import PaystackCreditCard from '../../../components/Utilities/PaystackCreditCard.vue';
+    import ReservationPayments from "@/domain/Reservation/Components/Payment/ReservationPayments.vue";
+    import reservationMixin from "@/domain/Reservation/Mixins/reservation";
     export default {
-        name: "ReservationCheckin",
-        components: {
+      name: "ReservationCheckin",
+      mixins: [reservationMixin],
+      components: {
+          ReservationPayments,
             ReservationDetails,
-            ReservationCharges, StripeCreditCard, UserIdentityVerification,
+            StripeCreditCard, UserIdentityVerification,
             SignaturePad, PaystackCreditCard, StripePaymentMethod,
         },
-        data(){},
         props: {
             reservation: Object,
             checkin: Object,
-            property: Object,
+            user: Object
         },
         computed: {
 
@@ -151,6 +156,10 @@
 
             guests(){
                 return this.checkin?.guests || []
+            },
+
+            signature(){
+              return this.checkin?.signature
             },
         },
     }
