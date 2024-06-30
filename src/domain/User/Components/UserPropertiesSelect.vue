@@ -3,7 +3,7 @@
       :items="properties"
       item-text="name"
       item-value="id"
-      :item-disabled="property => !(property.is_owner || (property.auth_access && property.auth_access.active))"
+      :item-disabled="property => !(property.access && (property.access.active || property.access.is_admin ))"
       v-bind="$attrs"
       v-on="$listeners"
   >
