@@ -6,14 +6,14 @@ import store from './store'
 import config from "@/config";
 
 export default async (uri, onNetworkError = () => {}, onGraphQlError = () => {}) => {
-    const httpLink = new HttpLink({
-    uri,
-    fetch,
-    headers: {
-        'LC-CLIENT-TOKEN': `Bearer ${config.apollo.client_key}`,
-        'LC-USER-TOKEN': `Bearer ${store.getters.auth.token}`
-      }
-    });
+    const headers = {
+        'LC-CLIENT-TOKEN': `Bearer ${config.apollo.client_key}`
+    }
+    const authToken = await store.dispatch('getAuthToken');
+    if(authToken) {
+        headers['LC-USER-TOKEN'] = `Bearer ${authToken}`
+    }
+    const httpLink = new HttpLink({ uri, fetch, headers });
   
     // Error Handling
   const errorLink = onError(({ graphQLErrors, networkError }) => {

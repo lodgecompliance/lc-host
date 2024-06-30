@@ -3,9 +3,11 @@ import helper from '@/helper';
 import GET_AUTH from '../domain/User/Queries/getAuth';
 import GET_ACCOUNT_AUTH_USER from '../domain/User/Queries/getAuthUserAccount';
 import GET_GR_AUTH_USER from '../domain/User/Queries/getAuthUserGrProfile';
+import REFRESH_AUTH_USER_TOKEN from '../domain/User/Queries/refreshAuthUserToken';
 import GET_SYSTEM_DATA from '../domain/Dashboard/Queries/getSystemData';
 import GET_SYSTEM_PARAMS from '../graphql/query/getSystemParam'
 import config from "@/config";
+import moment from "moment";
 
 const actions = {
 
@@ -76,45 +78,50 @@ const actions = {
         })
     },
 
+    refreshAuthToken({ commit, dispatch, getters }) {
+        return dispatch('query', {
+            domain: config.apollo.auth,
+            mutation: REFRESH_AUTH_USER_TOKEN,
+            variables: {
+                origin: config.app.url,
+                refresh_token: getters.auth.token?.refresh_token
+            }
+        }).then(response => {
+            commit('SET_AUTH', {
+                token: response?.data?.refreshAuthToken,
+                profile: getters.auth.profile
+            })
+        })
+    },
+
+    getAuthToken( { commit, dispatch, getters } ) {
+        if (!getters.auth?.token) return Promise.resolve(null)
+        if(moment(getters.auth.token.expirationTime).isSameOrBefore(moment())) {
+            return dispatch('refreshAuthToken')
+                .then(() => dispatch('getAuthToken'))
+                .catch(() => dispatch('signout'))
+        } else {
+            return Promise.resolve(getters.auth.token?.token)
+        }
+    },
+
     query({commit, dispatch}, { domain = config.apollo.gr,  query, variables, trial = 1 }){
-        return new Promise((resolve, reject) => {
-            _apollo(domain,(e) => {
-                const error = e.result;
-                }, (e) => {
-                    console.log('GraphQL Error-->', e);
-                }
-            ).then(apollo => {
-                return apollo.client.query({
-                    query, variables
-                })
-            }).then(response => {
-                return resolve(response)
-            })
-            .catch(e => {
-                return reject(e);
-            })
-        });
-        
+        return _apollo(domain,(e) => {
+                console.log('Network Error-->', e);
+            }, (e) => {
+                console.log('GraphQL Error-->', e);
+            }
+        )
+        .then(apollo =>  apollo.client.query({ query, variables }))
     },
     
     mutate({commit, dispatch}, { domain = config.apollo.gr, mutation, variables}){
-        return new Promise((resolve, reject) => {
-            _apollo(domain,(e) => {
-                    console.log('Network Error-->', e);
-                }, (e) => {
-                    console.log('GraphQL Error-->', e);
-                }
-            ).then(apollo => {
-                return apollo.client.mutate({
-                    mutation, variables
-                })
-            }).then(response => resolve(response))
-            .catch(e => {
-                if(e.result) return reject(e.result)
-                return reject(e);
-            })
-
-        })
+        return _apollo(domain,(e) => {
+                console.log('Network Error-->', e);
+            }, (e) => {
+                console.log('GraphQL Error-->', e);
+            }
+        ).then(apollo => apollo.client.mutate({mutation, variables }))
     },
 
     syncAuthUser({ dispatch }) {
@@ -138,16 +145,25 @@ const actions = {
         })
     },
 
-    signout({dispatch}){
-       return new Promise((resolve) => {
-           dispatch('postToAuth', { type: 'signout' })
-           resolve()
-       })
+    signout({dispatch, commit}){
+        return new Promise((resolve) => {
+            dispatch('postToAuth', { type: 'signout' })
+            dispatch('signedOut')
+            resolve()
+        })
+    },
+
+    signedOut({ commit }){
+        commit('UNSET_CURRENT_USER');
+        commit('SET_AUTH', { token: null, profile: null });
+        commit('SET_MODE', null)
     },
 
     postToAuth({ commit }, data) {
         let iframeEl = document.getElementById("authFrame");
-        iframeEl.contentWindow.postMessage(data, config.app.authDomain);
+        if(iframeEl) {
+            iframeEl.contentWindow.postMessage(data, config.app.authDomain);
+        }
     }
 }
 

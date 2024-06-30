@@ -5,7 +5,6 @@ const state = {
     app_process: '',
     auth: {
         token: null,
-        expires: null,
         profile: null,
     },
     auth_required: false,

@@ -10,7 +10,9 @@ export default gql`
             time
             read
             read_at
-            timestamp
+            timestamp {
+                created_at
+            }
             metadata {
                 key
                 value

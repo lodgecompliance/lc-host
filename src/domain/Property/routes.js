@@ -48,6 +48,9 @@ export default [
         path: '/:property/notifications',
         name: 'property.notifications',
         component: PropertyNotifications,
+        meta: {
+            requiresAuth: true,
+        },
     },
     {
         path: '/:property/reservation/:reservation',
