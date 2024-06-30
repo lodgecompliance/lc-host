@@ -155,26 +155,19 @@ const actions = {
         })
     },
 
-    signout({dispatch, commit}){
-        return new Promise((resolve) => {
-            dispatch('postToAuth', { type: 'signout' })
-            dispatch('signedOut')
-            resolve()
+
+    signedOut(){
+        window.location.replace(`${config.app.authDomain}/signout?redirect=${window.location.href}`)
+    },
+
+    signout({ commit }){
+        return new Promise(resolve => {
+            commit('UNSET_CURRENT_USER');
+            commit('SET_AUTH', { token: null, profile: null });
+            commit('SET_MODE', null);
+            resolve();
         })
     },
-
-    signedOut({ commit }){
-        commit('UNSET_CURRENT_USER');
-        commit('SET_AUTH', { token: null, profile: null });
-        commit('SET_MODE', null)
-    },
-
-    postToAuth({ commit }, data) {
-        let iframeEl = document.getElementById("authFrame");
-        if(iframeEl) {
-            iframeEl.contentWindow.postMessage(data, config.app.authDomain);
-        }
-    }
 }
 
 export default actions

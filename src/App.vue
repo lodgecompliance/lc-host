@@ -92,7 +92,7 @@
     <v-footer app>
       <a
           v-if="auth.profile"
-          class="d-flex align-center" style="cursor: pointer"
+          class="d-flex align-center text-decoration-none"
           :href="authDomain"
           target="_blank"
           >
@@ -102,7 +102,7 @@
       <v-spacer></v-spacer>
       <v-btn x-small @click="updateApp" title="Reload app" icon><v-icon>mdi-refresh</v-icon></v-btn>
     </v-footer>
-    <div :class="`auth-frame-container ${auth_required ? 'authenticate' : ''}`">
+    <div v-if="auth_required" :class="`auth-frame-container authenticate`">
       <iframe
           id="authFrame"
           :src="authUrl"
@@ -125,6 +125,7 @@ import PropertySwitch from "@/domain/Property/Components/PropertySwitch.vue";
 import ErrorHandler from "@/components/ErrorHandler.vue";
 import ReservationFormDialog from "@/domain/Reservation/Components/ReservationFormDialog.vue";
 import moment from "moment";
+import * as querystring from "querystring";
 
 export default {
   name: 'App',
@@ -141,6 +142,7 @@ export default {
     return {
       authDomain: config.app.authDomain,
       error: null,
+      showAuth: false,
     }
   },
 
@@ -157,7 +159,8 @@ export default {
       'system',
       'auth',
       'mode',
-      'auth_required'
+      'auth_required',
+      'auth_params'
     ]),
 
     plainLayoutRoutes() {
@@ -170,7 +173,7 @@ export default {
     },
 
     authUrl() {
-      return `${this.authDomain}/auth`;
+      return `${this.authDomain}/auth?${querystring.stringify(this.auth_params)}`;
     }
   },
 
@@ -230,7 +233,8 @@ export default {
         this.SET_APP_STATE(false)
         this.signout()
         .then(() => {
-            this.$intercom?.shutdown()
+            this.$intercom?.shutdown();
+            this.signedOut();
         }).finally(() => {
           this.SET_APP_STATE(true);
         })
@@ -274,7 +278,6 @@ export default {
                 }
                 else if(status === 'signedout') {
                   vm.signedOut();
-                  vm.SET_AUTH_REQUIRED(!!vm.$route.meta.requiresAuth);
                 }
                 break;
               case "view-account":

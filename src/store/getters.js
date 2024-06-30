@@ -2,6 +2,7 @@ import state from "@/store/state";
 
 const getters = {
     auth: state => state.auth,
+    auth_params: state => state.auth_params,
     auth_required: state => state.auth_required,
     error : state => state.error,
     app_ready: state => state.app_ready,

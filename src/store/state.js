@@ -7,6 +7,7 @@ const state = {
         token: null,
         profile: null,
     },
+    auth_params: {},
     auth_required: false,
     current_user: {
         auth: null,
