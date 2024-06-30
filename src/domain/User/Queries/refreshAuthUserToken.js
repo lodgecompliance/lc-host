@@ -7,7 +7,6 @@ mutation refreshAuthToken($refresh_token: String!, $origin: String!){
     expires_in
     id_token 
     project_id
-    refresh_token
     token_type
     user_id
     refresh_token

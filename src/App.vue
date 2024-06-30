@@ -124,6 +124,7 @@ import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import PropertySwitch from "@/domain/Property/Components/PropertySwitch.vue";
 import ErrorHandler from "@/components/ErrorHandler.vue";
 import ReservationFormDialog from "@/domain/Reservation/Components/ReservationFormDialog.vue";
+import moment from "moment";
 
 export default {
   name: 'App',
@@ -266,7 +267,8 @@ export default {
             switch (type) {
               case "auth":
                 if(status === 'signedin') {
-                  vm.SET_AUTH({ token, profile })
+                  token.expires_at = moment(token.expirationTime).local().toISOString();
+                  vm.SET_AUTH({ token, profile });
                   vm.SET_AUTH_REQUIRED(!(token && profile));
                   vm.setUser()
                 }
