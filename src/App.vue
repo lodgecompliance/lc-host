@@ -173,7 +173,10 @@ export default {
     },
 
     authUrl() {
-      return `${this.authDomain}/auth?${querystring.stringify(this.auth_params)}`;
+      return `${this.authDomain}/auth?${querystring.stringify({
+        ...this.auth_params,
+        referer: window.location.href
+      })}`;
     }
   },
 
