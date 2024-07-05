@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-    query getReservation($id: ID!){
-        getReservation(id: $id){
+    query getReservation($id: ID!, $property_id: ID){
+        getReservation(id: $id, property_id: $property_id){
             id
             user_id
             property_id

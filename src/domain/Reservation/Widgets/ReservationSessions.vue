@@ -79,6 +79,7 @@
                 v-if="current"
                 :reservation="reservation"
                 :id="current.id"
+                v-on="$listeners"
             />
           </v-card-text>
         </v-card>

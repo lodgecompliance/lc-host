@@ -30,9 +30,7 @@
                             class="success--text"
                             ><v-icon small color="success">mdi-check-circle</v-icon> Primary Guest</span>
                         </div>
-                        
                         <reservation-guest-info :info="guest.info" />
-
                     </div>
                 </div>
 
@@ -81,7 +79,6 @@
                         </v-list>
                     </v-menu>
                 </div>
-                
             </div>
 
             <reservation-guest-form
@@ -92,10 +89,7 @@
              @cancel="edit = false"
              v-on="$listeners"
               />
-            <template v-if="isCheckedIn" >
-              <user-identity-verification :user-id="guest.user_id" />
-            </template>
-
+              <user-identity-verification v-if="isCheckedIn" :user-id="guest.user_id" flat />
         </v-card-text>
         <confirmation-dialog ref="deleteConfirmation" @confirmed="deleteGuest()">
             <div class="text-center">

@@ -13,30 +13,28 @@
                     <p>We could not find that property</p>
                 </div>
             </v-container>
-            <slot v-else v-bind="property">
+            <slot v-else v-bind="{ property }">
               <v-row
                   align="center"
                   justify="center"
               >
                 <v-col class="text-center" cols="12" md="6">
-                  <v-sheet class="pa-3" rounded>
-                    <v-avatar color="primary" size="150">
-                      <v-img
-                          :src="property.image"
-                      ></v-img>
+                  <v-avatar color="primary" size="150">
+                    <v-img
+                        :src="property.image"
+                    ></v-img>
 
-                    </v-avatar>
-                    <div class="d-flex justify-center align-center">
-                      <h1>{{ property.name }}</h1>
-                      <v-btn v-if="property.access" icon title="Edit property" color="primary" class="ml-3" @click="$router.push({name: 'property.settings', params: { property: property.id }})">
-                        <v-icon>mdi-cog</v-icon>
-                      </v-btn>
-                    </div>
-                    <p>{{ property.address }}</p>
-                    <v-icon color="white" v-if="property.phone">mdi-phone</v-icon> {{ property.phone }}
-                    <br>
-                    <v-icon color="white" v-if="property.email">mdi-email</v-icon>  {{ property.email }}
-                  </v-sheet>
+                  </v-avatar>
+                  <div class="d-flex justify-center align-center">
+                    <h1>{{ property.name }}</h1>
+                    <v-btn v-if="property.access" icon title="Property Settings" color="primary" class="ml-3" @click="$router.push({name: 'property.settings', params: { property: property.id }})">
+                      <v-icon>mdi-cog</v-icon>
+                    </v-btn>
+                  </div>
+                  <p>{{ property.address }}</p>
+                  <v-icon color="white" v-if="property.phone">mdi-phone</v-icon> {{ property.phone }}
+                  <br>
+                  <v-icon color="white" v-if="property.email">mdi-email</v-icon>  {{ property.email }}
                 </v-col>
               </v-row>
             </slot>
@@ -107,7 +105,7 @@ export default {
                 }
             })
             .then(response => {
-                const property = response.data.getPropertyById;
+                const property = response?.data?.getPropertyById;
                 if(property) {
                   const propertyInAuth = this.properties.find(p => p.id === property.id);
                   if(propertyInAuth) {

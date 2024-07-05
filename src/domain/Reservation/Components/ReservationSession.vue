@@ -23,6 +23,12 @@
               :checkin="checkin"
               :user="session.user"
           />
+          <confirm-checkin-session
+              v-if="!reservation.checkedin"
+              :reservation="reservation"
+              :session="session"
+              v-on="$listeners"
+          />
         </template>
       </v-col>
       <v-col cols="12" md="6">
@@ -59,16 +65,21 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
+import gql from "graphql-tag";
 import MetadataListItem from "@/components/MetadataListItem.vue";
 import GoogleMap from "@/components/GoogleMap.vue";
 import ReservationCheckin from "@/domain/Reservation/Widgets/ReservationCheckin.vue";
-import {mapActions} from "vuex";
-import gql from "graphql-tag";
 import DataContainer from "@/components/DataContainer.vue";
+import ConfirmCheckinSession from "@/domain/Property/Components/ConfirmCheckinSession.vue";
 
 export default {
   name: "ReservationSession",
-  components: {DataContainer, ReservationCheckin, GoogleMap, MetadataListItem},
+  components: {
+    ConfirmCheckinSession, DataContainer,
+    ReservationCheckin, GoogleMap,
+    MetadataListItem
+  },
   data(){
     return {
       loading: false,

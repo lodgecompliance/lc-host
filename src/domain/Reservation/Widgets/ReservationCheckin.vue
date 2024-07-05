@@ -2,12 +2,12 @@
     <section>
 
       <section class="my-2">
-        <h4 class="headline">Reservation Details</h4>
+        <h4 class="grey--text">Reservation Details</h4>
         <reservation-details :reservation="reservation" />
       </section>
 
       <section class="my-2" >
-        <h4 class="headline">Agreements</h4>
+        <h4>Agreements</h4>
         <template v-if="agreements && agreements.length">
           <v-list>
             <v-list-item v-for="(agreement, i) in agreements" :key="i">
@@ -32,7 +32,8 @@
       </section>
 
       <section class="my-2">
-        <h4 class="headline">Questions</h4>
+
+        <h4>Questions</h4>
         <v-list v-if="questions && questions.length">
           <v-list-item v-for="(question, q) in questions" :key="q">
             <v-list-item-icon>
@@ -61,7 +62,7 @@
       </section>
 
       <section v-if="reservation.require_credit_card" class="my-2">
-        <h4 class="headline">Credit card</h4>
+        <h4>Credit card</h4>
         <div v-if="!credit_card" class="text-center">No credit card</div>
         <template v-if="credit_card && credit_card.stripe">
           <stripe-credit-card
@@ -81,7 +82,7 @@
       </section>
 
       <section class="my-2">
-        <h4 class="headline">Payments</h4>
+        <h4>Payments</h4>
         <reservation-payments
             outlined
             :property="property"
@@ -93,13 +94,14 @@
       </section>
 
       <section v-if="reservation.require_id_verification" class="my-2">
-        <h4 class="headline">ID Verification</h4>
+        <h4>ID Verification</h4>
         <user-identity-verification
             :user-id="user.id"
+            flat
         />
       </section>
       <section class="my-2">
-        <h4 class="headline">Signature</h4>
+        <h4>Signature</h4>
         <signature-pad
             :signature="signature"
             :editable="false"
@@ -123,9 +125,9 @@
       mixins: [reservationMixin],
       components: {
           ReservationPayments,
-            ReservationDetails,
-            StripeCreditCard, UserIdentityVerification,
-            SignaturePad, PaystackCreditCard, StripePaymentMethod,
+          ReservationDetails,
+          StripeCreditCard, UserIdentityVerification,
+          SignaturePad, PaystackCreditCard, StripePaymentMethod,
         },
         props: {
             reservation: Object,

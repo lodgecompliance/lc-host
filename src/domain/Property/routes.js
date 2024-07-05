@@ -43,6 +43,9 @@ export default [
         path: '/:property',
         name: 'property.show',
         component: PropertyShow,
+        meta: {
+            requiresAuth: true,
+        },
     },
     {
         path: '/:property/notifications',

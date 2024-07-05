@@ -8,7 +8,6 @@
                   v-if="reservationOwner && guests.filter(g => g.user_id == null).length"
                    type="info"
                    colored-border
-                   prominent
                    border="left">
                 Don't forget to send the link above to your guests for confirmation
               </v-alert>
