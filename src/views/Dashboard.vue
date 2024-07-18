@@ -65,7 +65,7 @@
     },
     mounted() {
       if(!this.current_user.profile.auth.is_admin) {
-        this.$store.commit("SET_MODE", "guest");
+        this.$store.commit("SET_MODE", "host");
         this.$router.push({ name: 'home' })
         return;
       }
