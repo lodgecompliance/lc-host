@@ -6,8 +6,5 @@ import 'firebase/messaging'
 import config from './config';
 
 firebase.initializeApp(config.firebase.sdk)
-  
-export const fb = firebase;
-export const db = firebase.firestore();  
-export const auth = firebase.auth();  
+export const auth = firebase.auth();
 export const storage = firebase.storage();
