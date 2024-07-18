@@ -1,43 +1,54 @@
 <template>
+  <section>
     <v-data-table
         :headers="headers"
         :items="reservations"
         :search="search"
         multi-sort
+        v-on="$listeners"
+        :page.sync="page"
+        :items-per-page="itemsPerPage"
+        @page-count="pageCount = $event"
+        hide-default-footer
     >
-        <template v-slot:item.id="{ item }">
-          <router-link
-              :to="{ name: 'property.reservation.show', params: { property: item.property_id, reservation: item.id, _reservation: item }}"
-              class="text-decoration-none"
-          >
-            {{ item.id }}
-          </router-link>
-        </template>
-        <template v-slot:item.status="{ item }">
-            <reservation-status :reservation="item" />
-        </template>
+      <template v-slot:item.id="{ item }">
+        <router-link
+            :to="{ name: 'property.reservation.show', params: { property: item.property_id, reservation: item.id, _reservation: item }}"
+            class="text-decoration-none"
+        >
+          {{ item.id }}
+        </router-link>
+      </template>
+      <template v-slot:item.status="{ item }">
+        <reservation-status :reservation="item" />
+      </template>
+      <template v-slot:item.guests="{ item }">
+        {{ item.guests.length }}
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <div class="d-flex">
+          <reservation-host-options
+              :reservation="item"
+              v-on="$listeners"
+          />
+          <reservation-host-actions
+              :reservation="item"
+              v-on="$listeners"
+          />
+        </div>
+      </template>
+      <template v-slot:item.timestamp.created_at="{ item }">
+        {{ momentFromTimestamp(item.timestamp.created_at).format('YYYY-MM-DD hh:mm a') }}
+      </template>
+    </v-data-table>
+    <div class="text-center pt-2">
+      <v-pagination
+          v-model="pagination.page"
+          :length="0"
+      ></v-pagination>
+    </div>
+  </section>
 
-        <template v-slot:item.guests="{ item }">
-          {{ item.guests.length }}
-        </template>
-
-        <template v-slot:item.actions="{ item }">
-          <div class="d-flex">
-            <reservation-host-options
-                :reservation="item"
-                v-on="$listeners"
-            />
-            <reservation-host-actions
-                :reservation="item"
-                v-on="$listeners"
-            />
-          </div>
-        </template>
-
-        <template v-slot:item.timestamp.created_at="{ item }">
-            {{ momentFromTimestamp(item.timestamp.created_at).format('YYYY-MM-DD hh:mm a') }}
-        </template>
-    </v-data-table>                
 </template>
 <script>
 
@@ -53,8 +64,11 @@ export default {
         ReservationStatus, ReservationHostActions
     },
     data(){
-  
         return {
+            pagination: {
+              page: 1,
+              size: 10,
+            },
             headers: [
                 { text: 'ID', align: 'start', value: 'id', sortable: false },
                 { text: 'Booking Name', align: 'left', value: 'name' },
@@ -70,13 +84,14 @@ export default {
     props: {
         reservations: Array,
         search: String,
+        page: Number,
+        itemsPerPage: Number
     },
 
     methods: {
         momentFromTimestamp(timestamp) {
             return moment.unix(timestamp);
         },
-
      },
 }
 </script>

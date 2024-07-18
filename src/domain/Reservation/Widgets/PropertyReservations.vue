@@ -2,7 +2,7 @@
   <div v-if="property">
       <v-sheet class="pa-2 rounded-b-0" rounded elevation="0">
          <v-row tile class="d-flex">
-              <v-col v-if="view === 'Table'" cols="12" sm="3" class="py-0">
+              <v-col v-if="view === 'Table'" cols="12" sm="6" class="py-0">
                   <v-text-field
                       v-model="search"
                       append-icon="mdi-magnify"
@@ -11,7 +11,8 @@
                       dense
                   ></v-text-field>
               </v-col>
-              <v-col cols="12" :sm="view === 'Table' ? 6 : 8" class="py-0">
+           <v-spacer></v-spacer>
+           <v-col cols="12" :sm="view === 'Table' ? 4 : 8" class="py-0">
                 <reservation-status-filter
                   :includes="includes"
                   label="Status filter"
@@ -22,17 +23,16 @@
                   dense
                 />
               </v-col>
-              <v-spacer></v-spacer>
-              <v-col cols="12" :sm="view === 'Table' ? 3 : 4" class="py-0">
-                  <v-select
-                      v-model="view"
-                      :items="views"
-                      dense
-                      outlined
-                      hide-details
-                      label="View"
-                  ></v-select>
-              </v-col>
+<!--              <v-col cols="12" :sm="view === 'Table' ? 3 : 4" class="py-0">-->
+<!--                  <v-select-->
+<!--                      v-model="view"-->
+<!--                      :items="views"-->
+<!--                      dense-->
+<!--                      outlined-->
+<!--                      hide-details-->
+<!--                      label="View"-->
+<!--                  ></v-select>-->
+<!--              </v-col>-->
           </v-row>
           <div class="d-flex justify-end align-content-center">
             <v-checkbox
@@ -55,6 +55,7 @@
               :search="search"
               @reservation-updated="reservationUpdated"
               @reservation-deleted="reservationDeleted"
+              @pagination="paginationUpdated"
           ></component>
       </data-container>
   </div>
@@ -89,7 +90,11 @@ export default {
             statusFilter: [],
             reservations: [],
             includes: [],
-            error: null
+            error: null,
+            pagination: {
+              page: 1,
+              size: 10,
+            }
         }
     },
     computed: {
@@ -125,10 +130,13 @@ export default {
                 query: GET_PROPERTY_RESERVATIONS,
                 variables: {
                     id: this.property.id,
+                    pagination: this.pagination,
                     includes: this.includes
                 }
             }).then(response => {
-                this.reservations = response.data?.getPropertyReservations?.data || [];
+               response = response?.data?.getPropertyReservations;
+                this.reservations = response?.data || [];
+                this.pagination = response?.pagination;
             })
             .catch(e => {
                 this.error = e
@@ -156,7 +164,16 @@ export default {
       reservationDeleted(deletedReservation) {
           const index = this.reservations.findIndex(r => r.id === deletedReservation.id);
           if(index >= 0) this.reservations.splice(index, 1);
+      },
+
+      paginationUpdated(pagination) {
+          this.pagination = {
+            page: pagination.page,
+            size: pagination.itemsPerPage
+          };
+        //this.getPropertyReservations()
       }
+
      },
 
     watch: {
