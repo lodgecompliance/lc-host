@@ -1,17 +1,17 @@
 <template>
      <v-card :loading="loading" flat>
-        <confirmation-dialog ref="deleteConfirmation" @confirmed="deleteTemplate">
+        <confirmation-dialog ref="deleteConfirmation" @confirmed="deleteInstruction">
             <div class="text-center mt-5">
                 <p>
-                    Are you sure you want to delete the template
+                    Are you sure you want to delete the instruction
                 </p>
-                <h4>{{ data_template.title }}</h4>
+                <h4>{{ data_instruction.title }}</h4>
             </div>
         </confirmation-dialog>
         <v-card-title class="d-flex flex-nowrap justify-space-between">
-            <h4 class="text-truncate">{{ data_template.title }}</h4>
+            <h4 class="text-truncate">{{ data_instruction.title }}</h4>
             <div class="d-flex">
-                <v-btn v-if="template" @click="edit = !edit" icon>
+                <v-btn v-if="instruction" @click="edit = !edit" icon>
                     <v-icon v-html="edit ? 'mdi-chevron-up' : 'mdi-chevron-down'"></v-icon>
                 </v-btn>
                 <v-btn color="error" icon @click="$refs.deleteConfirmation.open()">
@@ -20,10 +20,10 @@
             </div>
         </v-card-title>
         <v-card-text v-if="edit">
-            <property-checkin-instruction-template-form
-            :template="data_template"
+            <property-checkin-instruction-form
+            :instruction="data_instruction"
             :property="property"
-            @updated="templateUpdated"
+            @updated="instructionUpdated"
             @cancel="edit = false"
               />
         </v-card-text>
@@ -31,47 +31,47 @@
 </template>
 
 <script>
-import PropertyCheckinInstructionTemplateForm from './PropertyCheckinInstructionTemplateForm';
+import PropertyCheckinInstructionForm from './PropertyCheckinInstructionForm.vue';
 import ConfirmationDialog from '@/components/Utilities/ConfirmationDialog';
-import DELETE_TEMPLATE from '../Mutations/deletePropertyCheckinInstructionTemplate';
+import DELETE_INSTRUCTION from '../Mutations/deletePropertyCheckinInstruction';
 
 export default {
-    name: "PropertyCheckinInstructionTemplate",
+    name: "PropertyCheckinInstruction",
     props: {
         property: Object,
-        template: Object,
+        instruction: Object,
     },
     data(){
         return {
             loading: false,
             edit: false,
-            data_template: {},
+            data_instruction: {},
         }
     },
     components: {
-        PropertyCheckinInstructionTemplateForm, ConfirmationDialog
+      PropertyCheckinInstructionForm, ConfirmationDialog
     },
 
     methods: {
-        templateUpdated(template){
-            this.data_template = template;
+        instructionUpdated(instruction){
+            this.data_instruction = instruction;
             this.edit = false;
         },
 
-        deleteTemplate() {
+        deleteInstruction() {
             this.loading = true;
             this.$store.dispatch('mutate', {
-                mutation: DELETE_TEMPLATE,
+                mutation: DELETE_INSTRUCTION,
                 variables: {
                     property_id: this.property.id,
-                    template_id: this.data_template.id,
+                    instruction_id: this.data_instruction.id,
                 }
             }).then(response => {
-                if(response.data.deletePropertyCheckinInstructionTemplate) {
-                    this.$emit('deleted', this.data_template)
+                if(response.data.deletePropertyCheckinInstruction) {
+                    this.$emit('deleted', this.data_instruction)
                     this.$store.commit('SNACKBAR', {
                         status: true,
-                        text: `Template deleted`,
+                        text: `Instruction deleted`,
                         color: 'success'
                     });
                 }
@@ -79,8 +79,8 @@ export default {
             .catch(e => {
                 this.$store.commit('TOAST_ERROR', {
                     show: true,
-                    retry: () => this.deleteTemplate(),
-                    message: 'Could not delete template. ',
+                    retry: () => this.deleteInstruction(),
+                    message: 'Could not delete instruction. ',
                     exception: e
                 })
                 this.$emit('error', e);
@@ -91,10 +91,10 @@ export default {
         }
     },
     watch: {
-        template: {
+        instruction: {
             immediate: true,
-            handler(template){
-                this.data_template = template
+            handler(instruction){
+                this.data_instruction = instruction
             }
         }
     }

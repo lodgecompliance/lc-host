@@ -54,6 +54,7 @@
                 </template>
             </property-question-list>
         </template>
+
         <v-btn color="primary" small depressed @click="addAttachment" class="my-2">
           <v-icon>mdi-plus</v-icon> New Attachment
         </v-btn>

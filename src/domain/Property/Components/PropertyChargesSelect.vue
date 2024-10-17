@@ -22,7 +22,7 @@
         v-on="$listeners"
         v-bind="$attrs"
         v-model="selected"
-        :no-data-text="`${loading ? 'Please wait...' : `${allowedCurrency ? `No charge in ${allowedCurrency}` : `Select a currency first`}` }`"
+        :no-data-text="`${loading ? 'Please wait...' : `${allowedCurrency ? `No ${allowedCurrency} charge` : `No charge to select from`}` }`"
         >
     
             <template v-slot:item="{ item, on }">
@@ -138,9 +138,10 @@ export default {
 
     computed: {
         filterdItems() {
-            if(!this.allowedCurrency) return [];
             let items = this.items
-            items = this.items.filter(item => item.currency === this.allowedCurrency);
+            if(this.allowedCurrency){
+              items = this.items.filter(item => item.currency === this.allowedCurrency);
+            }
             return items.filter(item => item.enable);
         },
 

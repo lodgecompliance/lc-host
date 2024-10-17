@@ -31,7 +31,7 @@
 
 <script>
 
-import GET_PROPERTY_CHECKIN_INSTRUCTION_TEMPLATES from '../Queries/getPropertyCheckinInstructionTemplates';
+import GET_PROPERTY_CHECKIN_INSTRUCTION from '../Queries/getPropertyCheckinInstructions';
 
 export default {
     name: "PropertyCheckinInstructionTemplateSelect",
@@ -61,7 +61,7 @@ export default {
             }
             this.loading = true;
             this.$store.dispatch('query', {
-                query: GET_PROPERTY_CHECKIN_INSTRUCTION_TEMPLATES,
+                query: GET_PROPERTY_CHECKIN_INSTRUCTION,
                 variables: {
                     id: this.property.id
                 }

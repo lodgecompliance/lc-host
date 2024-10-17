@@ -1,5 +1,6 @@
 export default {
     app: {
+        name: process.env.VUE_APP_NAME,
         url: process.env.VUE_APP_URL,
         env: process.env.VUE_APP_ENV,
         mode: process.env.NODE_ENV,

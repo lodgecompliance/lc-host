@@ -1,7 +1,7 @@
 <template>
     <v-card v-bind="$attrs" flat :loading="loading">
         <slot name="header" />
-        <v-card-text>
+        <v-card-text class="pt-3">
           <v-form ref="form" @submit.prevent="submit">
             <v-radio-group v-model="form.type"
             dense

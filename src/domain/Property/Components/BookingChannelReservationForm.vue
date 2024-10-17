@@ -294,7 +294,7 @@
 
 <script>
 import PropertyChargesSelect from '../Components/PropertyChargesSelect.vue';
-import PropertyCheckinInstructionTemplateSelect from '../Components/PropertyCheckinInstructionTemplateSelect.vue';
+import PropertyCheckinInstructionTemplateSelect from './PropertyCheckinInstructionSelect.vue';
 import PropertyCheckinAgreementSelect from '../Components/PropertyCheckinAgreementSelect.vue';
 import PropertyCheckinQuestionSelect from '../Components/PropertyCheckinQuestionSelect.vue';
 import CurrencySelect from '../Components/PropertyCurrencySelect.vue';

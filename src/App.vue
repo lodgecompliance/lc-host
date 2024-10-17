@@ -17,7 +17,7 @@
          ></v-app-bar-nav-icon>
       <router-link to="/" class="text--primary text-decoration-none">
         <v-toolbar-title v-if="$vuetify.breakpoint.mdAndUp || mode !== 'host'" dark>
-          <span>Guest Registration</span>
+          <span>{{ config.app.name }}</span>
         </v-toolbar-title>
       </router-link>
       <template v-if="mode === 'host'">
@@ -148,6 +148,7 @@ export default {
 
   computed:{
     ...mapGetters([
+      'config',
       'app_ready',
       'app_process',
       'authenticated',

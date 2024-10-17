@@ -1,7 +1,7 @@
 <template>
     <v-card v-bind="$attrs" flat>
         <slot name="header" />
-        <v-card-text class="px-0">
+        <v-card-text class="pt-3">
             <v-form ref="form">
                 <v-text-field
                     outlined dense
@@ -22,20 +22,20 @@
 
         <v-card-actions>
             <v-btn text color="red" @click="$emit('cancel')">Cancel</v-btn>
-            <v-btn type="submit" color="primary" :loading="loading">Save</v-btn>
+            <v-btn type="submit" color="primary" depressed :loading="loading" @click="submit">Save</v-btn>
         </v-card-actions>
     </v-card>
 </template>
 <script>
-import CREATE_PROPERTY_CHECKIN_INSTRUCTION_TEMPLATE from '../Mutations/createPropertyCheckinInstructionTemplate';
-import UPDATE_PROPERTY_CHECKIN_INSTRUCTION_TEMPLATE from '../Mutations/updatePropertyCheckinInstructionTemplate';
+import CREATE_PROPERTY_CHECKIN_INSTRUCTION from '../Mutations/createPropertyCheckinInstruction';
+import UPDATE_PROPERTY_CHECKIN_INSTRUCTION from '../Mutations/updatePropertyCheckinInstruction';
 import formValidation from '@/helper/formValidation';
 
 export default {
-    name: "PropertyCheckinInstructionTemplateForm",
+    name: "PropertyCheckinInstructionForm",
     props: {
         property: Object,
-        template: Object,
+        instruction: Object,
     },
     data(){
         return {
@@ -50,20 +50,20 @@ export default {
     methods: {
         submit(){
             if(!this.$refs.form.validate()) return;
-            if(this.template) this.updateInstructionTemplate();
+            if(this.instruction) this.updateInstructionTemplate();
             else this.createInstructionTemplate();
         },
 
         createInstructionTemplate(){
             this.loading = true;
             this.$store.dispatch('mutate', {
-                mutation: CREATE_PROPERTY_CHECKIN_INSTRUCTION_TEMPLATE,
+                mutation: CREATE_PROPERTY_CHECKIN_INSTRUCTION,
                 variables: {
                     property_id: this.property.id,
                     ...this.form
                 }
             }).then(response => {
-                const template = response.data.createPropertyCheckinInstructionTemplate;
+                const template = response.data.createPropertyCheckinInstruction;
                 this.$emit('created', template);
                 this.$refs.form.reset();
                 this.$store.commit('SNACKBAR', {
@@ -75,7 +75,7 @@ export default {
             .catch(e => {
                 this.$store.commit('TOAST_ERROR', {
                     show: true,
-                    retry: () => this.createProperty(),
+                    retry: () => this.createInstructionTemplate(),
                     message: 'Could not create instruction. ',
                     exception: e
                 })
@@ -89,25 +89,25 @@ export default {
         updateInstructionTemplate(){
             this.loading = true;
             this.$store.dispatch('mutate', {
-                mutation: UPDATE_PROPERTY_CHECKIN_INSTRUCTION_TEMPLATE,
+                mutation: UPDATE_PROPERTY_CHECKIN_INSTRUCTION,
                 variables: {
                     property_id: this.property.id,
-                    template_id: this.template.id,
+                    instruction_id: this.instruction.id,
                     ...this.form
                 }
             }).then(response => {
-                const template = response.data.updatePropertyCheckinInstructionTemplate
-                this.$emit('updated',  template)
+                const instruction = response.data.updatePropertyCheckinInstruction
+                this.$emit('updated',  instruction)
                 this.$store.commit('SNACKBAR', {
                     status: true,
-                    text: `${template.title} instruction updated`,
+                    text: `${instruction.title} instruction updated`,
                     color: 'success'
                 })
             })
             .catch(e => {
                 this.$store.commit('TOAST_ERROR', {
                     show: true,
-                    retry: () => this.createProperty(),
+                    retry: () => this.updateInstructionTemplate(),
                     message: 'Could not update instruction. ',
                     exception: e
                 })
@@ -120,13 +120,13 @@ export default {
         }
     },
     watch: {
-        template: {
+        instruction: {
             immediate: true,
-            handler(template){
-                if(template){
+            handler(instruction){
+                if(instruction){
                     this.form = {
-                        title: template.title,
-                        body: template.body
+                        title: instruction.title,
+                        body: instruction.body
                     }
                 }
                 
