@@ -17,7 +17,7 @@
         </v-radio>
       </v-radio-group>
       <div class="text-center">
-        <account-link :path="`/${property.business_id}/credit-cards`">
+        <account-link :path="`${property.business_id}/credit-cards`">
           Add another card
         </account-link>
       </div>
