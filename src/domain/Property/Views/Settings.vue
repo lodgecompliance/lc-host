@@ -132,7 +132,7 @@
 
 import ChargesTab from '../Settings/PropertyCharges.vue';
 import IntegrationsTab from '../Settings/PropertyIntegrations.vue';
-import CheckinInstructionsTab from '../Settings/PropertyCheckinInstructionTemplates';
+import CheckinInstructionsTab from '../Settings/PropertyCheckinInstructions.vue';
 import CheckinAgreementsTab from '../Settings/PropertyCheckinAgreements';
 import CheckinQuestionsTab from '../Settings/PropertyCheckinQuestions';
 import PropertyReservationSettingTab from '../Settings/PropertyReservationSetting.vue';

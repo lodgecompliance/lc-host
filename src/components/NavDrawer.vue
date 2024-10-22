@@ -108,14 +108,15 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import { mapGetters} from 'vuex'
 import config from "@/config";
+import Lc from "@/lc";
 
 export default {
     name: "NavDrawer",
     data(){
         return {
-            appName: "Guest Registration",
+            appName: "Host Manager",
             currentNav: null
         }
     },
@@ -299,7 +300,7 @@ export default {
         {
           title: 'Account',
           icon: 'mdi-account',
-          href: config.app.authDomain,
+          href: Lc.link(``),
           target: '_blank',
           render: true,
         }

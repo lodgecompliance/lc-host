@@ -10,7 +10,7 @@
         <data-container :loading="loading" :error="error" @retry="getProperty">
             <v-container v-if="!property">
                 <div class="text-center grey--text">
-                    <p>We could not find that property</p>
+                    <p>We could not find that property or you do not have access to it</p>
                 </div>
             </v-container>
             <slot v-else v-bind="{ property }">

@@ -2,7 +2,7 @@
     <section>
       <div class="d-flex flex-wrap justify-space-between">
         <slot name="heading" />
-        <v-dialog v-model="createNewTemplate" width="400px" scrollable>
+        <v-dialog v-model="createNew" width="400px" scrollable>
           <template #activator="{ on }">
             <v-btn
                 color="primary"
@@ -11,22 +11,22 @@
               <v-icon dark> mdi-plus</v-icon> Create New
             </v-btn>
           </template>
-          <property-checkin-instruction-template-form
+          <property-checkin-instruction-form
               class="my-2"
               :property="property"
-              @created="templateCreated"
-              @cancel="createNewTemplate = false" >
+              @created="instructionCreated"
+              @cancel="createNew = false" >
             <template #header>
               <v-card-title>
-                <h2 class="headline">New Agreement</h2>
+                <h2 class="headline">New Instruction</h2>
                 <v-spacer></v-spacer>
-                <v-btn icon @click="createNewTemplate = false"><v-icon>mdi-close</v-icon></v-btn>
+                <v-btn icon @click="createNew = false"><v-icon>mdi-close</v-icon></v-btn>
               </v-card-title>
             </template>
-          </property-checkin-instruction-template-form>
+          </property-checkin-instruction-form>
         </v-dialog>
       </div>
-       <data-container :loading="loading" :error="error" @retry="getTemplates">
+       <data-container :loading="loading" :error="error" @retry="getInstructions">
             <template v-slot:loading>
                 <div  v-for="i in 4" :key="i">
                     <v-skeleton-loader
@@ -37,13 +37,13 @@
                 </div>
             </template>
 
-            <template v-if="templates.length">
-                <property-checkin-instruction-template 
-                v-for="template in templates" :key="template.id"
-                :property="property"
-                :template="template"
-                @deleted="templateDeleted"
-                class="my-1" />
+            <template v-if="instructions.length">
+                <property-checkin-instruction
+                    v-for="template in instructions" :key="template.id"
+                    :property="property"
+                    :instruction="template"
+                    @deleted="instructionDeleted"
+                    class="my-1" />
             </template>
             <template v-else>
                 <div class="py-5 text-center">
@@ -56,17 +56,17 @@
 </template>
 <script>
 import DataContainer from '../../../components/DataContainer.vue';
-import PropertyCheckinInstructionTemplateForm from '../Components/PropertyCheckinInstructionTemplateForm';
-import PropertyCheckinInstructionTemplate from '../Components/PropertyCheckinInstructionTemplate';
+import PropertyCheckinInstructionForm from '../Components/PropertyCheckinInstructionForm.vue';
+import PropertyCheckinInstruction from '../Components/PropertyCheckinInstruction.vue';
 
-import GET_PROPERTY_CHECKIN_INSTRUCTION_TEMPLATES from '../Queries/getPropertyCheckinInstructionTemplates';
+import GET_PROPERTY_CHECKIN_INSTRUCTIONS from '../Queries/getPropertyCheckinInstructions';
 
 export default {
     name: "PropertyCheckinInstructionTemplates",
     components: {
         DataContainer,
-        PropertyCheckinInstructionTemplate,
-        PropertyCheckinInstructionTemplateForm,
+        PropertyCheckinInstruction,
+        PropertyCheckinInstructionForm,
     },
 
     props: {
@@ -77,24 +77,22 @@ export default {
         return {
             loading: false,
             error: null,
-            createSecurityDeposit: false,
-            createNewTemplate: false,
-            templates: [],
+            createNew: false,
+            instructions: [],
         }
     },  
 
     methods: {
-        getTemplates(){
+        getInstructions(){
             this.loading = true;
-           
              this.$store.dispatch('query', {
-                query: GET_PROPERTY_CHECKIN_INSTRUCTION_TEMPLATES,
+                query: GET_PROPERTY_CHECKIN_INSTRUCTIONS,
                 variables: {
                     id: this.property.id
                 }
             })
             .then(response => {
-                this.templates = response.data.getPropertyById?.checkin_instructions
+                this.instructions = response.data.getPropertyById?.checkin_instructions
             })
             .catch(e => {
                 this.error = e
@@ -104,14 +102,14 @@ export default {
             })
         },
 
-        templateCreated(template){
-            this.templates.unshift(template);
-            this.createNewTemplate = false;
+        instructionCreated(template){
+            this.instructions.unshift(template);
+            this.createNew = false;
         },
 
-        templateDeleted(template) {
-            const index = this.templates.findIndex(t => t.id === template.id);
-            if(index >= 0) this.templates.splice(index, 1);
+        instructionDeleted(template) {
+            const index = this.instructions.findIndex(t => t.id === template.id);
+            if(index >= 0) this.instructions.splice(index, 1);
         }
     },
 
@@ -119,7 +117,7 @@ export default {
         property: {
             immediate: true,
             handler(property){
-                if(property) this.getTemplates()
+                if(property) this.getInstructions()
                 else this.loading = false;
             }
         }

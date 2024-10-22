@@ -17,7 +17,7 @@
          ></v-app-bar-nav-icon>
       <router-link to="/" class="text--primary text-decoration-none">
         <v-toolbar-title v-if="$vuetify.breakpoint.mdAndUp || mode !== 'host'" dark>
-          <span>Guest Registration</span>
+          <span>{{ config.app.name }}</span>
         </v-toolbar-title>
       </router-link>
       <template v-if="mode === 'host'">
@@ -102,12 +102,6 @@
       <v-spacer></v-spacer>
       <v-btn x-small @click="updateApp" title="Reload app" icon><v-icon>mdi-refresh</v-icon></v-btn>
     </v-footer>
-    <div v-if="auth_required" :class="`auth-frame-container authenticate`">
-      <iframe
-          id="authFrame"
-          :src="authUrl"
-      ></iframe>
-    </div>
   </v-app>
 </template>
 
@@ -124,8 +118,6 @@ import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import PropertySwitch from "@/domain/Property/Components/PropertySwitch.vue";
 import ErrorHandler from "@/components/ErrorHandler.vue";
 import ReservationFormDialog from "@/domain/Reservation/Components/ReservationFormDialog.vue";
-import moment from "moment";
-import * as querystring from "querystring";
 
 export default {
   name: 'App',
@@ -148,6 +140,7 @@ export default {
 
   computed:{
     ...mapGetters([
+      'config',
       'app_ready',
       'app_process',
       'authenticated',
@@ -171,13 +164,6 @@ export default {
       return this.plainLayoutRoutes.includes(this.$route.name)
       ? 'plain' : 'full'
     },
-
-    authUrl() {
-      return `${this.authDomain}/auth?${querystring.stringify({
-        ...this.auth_params,
-        referer: window.location.href
-      })}`;
-    }
   },
 
     methods:{
@@ -213,7 +199,7 @@ export default {
           })
           .catch(e => {
             if(this.updateExists) this.refreshApp();
-            else this.error = e
+            // else this.error = e
           })
           .finally(() => {
               this.bootIntercom();
@@ -255,7 +241,7 @@ export default {
           return Promise.reject(
               "Cannot start application, critical update is required. Hold on while application is rebooted"
           )
-        }
+        } else this.setUser()
       })
       .catch(e => {
         console.log(e);
@@ -263,40 +249,17 @@ export default {
     },
 
     created() {
-      const vm = this;
         this.SET_MOBILE( screen.width < 768);
         window.addEventListener('resize', (e) => {
           this.SET_MOBILE( screen.width < 768)
         })
-        window.addEventListener('message', function(message) {
-          if (message.origin === config.app.authDomain) {
-            let { type, token, profile, status } = message.data;
-            switch (type) {
-              case "auth":
-                if(status === 'signedin') {
-                  token.expires_at = moment(token.expirationTime).local().toISOString();
-                  vm.SET_AUTH({ token, profile });
-                  vm.SET_AUTH_REQUIRED(!(token && profile));
-                  vm.setUser()
-                }
-                else if(status === 'signedout') {
-                  vm.signedOut();
-                }
-                break;
-              case "view-account":
-                window.location.replace(config.app.authDomain);
-                break;
-            }
-          }
-        });
     },
 
     watch: {
       $route: {
         immediate: true,
-        handler(route) {
+        handler() {
           this.$store.commit( 'SET_APP_LAYOUT', this.layout);
-          this.SET_AUTH_REQUIRED(route.meta.requiresAuth && !this.authenticated)
         }
       }
     }
@@ -362,46 +325,6 @@ export default {
   .box-shadow-unset {
     box-shadow: unset !important;
     -webkit-box-shadow: unset !important;
-  }
-
-  .auth-frame-container {
-    display: none
-  }
-
-  .auth-frame-container iframe {
-    border: 0;
-  }
-
-  .auth-frame-container.authenticate {
-    padding: 50px 0;
-    display: flex;
-    position: fixed;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0,0,0,.5);
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    z-index: 1000000
-  }
-
-  .auth-frame-container.authenticate iframe {
-    width: 90%;
-    height: 90%;
-  }
-
-  @media screen and (min-width: 768px) {
-    .auth-frame-container.authenticate iframe {
-      width: 50%;
-    }
-  }
-
-  @media screen and (min-width: 992px) {
-    .auth-frame-container.authenticate iframe {
-      width: 30%;
-    }
   }
 
 </style>

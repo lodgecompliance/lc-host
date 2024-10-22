@@ -4,7 +4,7 @@ module.exports = {
     "vue-tel-input-vuetify"
   ],
   pwa: {
-    name: "LC Host",
+    name: "Host Manager",
     appleMobileWebAppStatusBarStyle: 'white',
     themeColor: "#1976D2",
     msTileColor: "#ffffff",

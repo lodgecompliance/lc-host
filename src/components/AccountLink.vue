@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import config from "@/config";
+import Lc from "@/lc";
 export default {
   name: "AccountLink",
   props: {
@@ -11,7 +11,7 @@ export default {
   },
   computed: {
     authUrl(){
-      return config.app.authDomain+this.path
+      return Lc.link(this.path)
     }
   }
 }

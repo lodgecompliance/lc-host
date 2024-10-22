@@ -6,8 +6,8 @@
         persistent
         >
         <v-card >
-            <v-card-title class="primary white--text">
-                <h4><v-icon class="mr-2" color="white">mdi-attachment</v-icon> <slot name="heading">Attachment {{ attachment.type ?  attachment.type : '' }}</slot></h4>
+            <v-card-title>
+                <h4><v-icon class="mr-2">mdi-attachment</v-icon> <slot name="heading">Attachment {{ attachment.type ?  attachment.type : '' }}</slot></h4>
                 <v-spacer></v-spacer>
                 <v-btn
                 icon
@@ -82,7 +82,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-btn text color="red" @click="cancel">Cancel</v-btn>
-                <v-btn color="primary" @click="done">
+                <v-btn color="primary" @click="done" depressed>
                     Done
                 </v-btn>
             </v-card-actions>

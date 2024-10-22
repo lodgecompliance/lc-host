@@ -1,6 +1,7 @@
-import state from "@/store/state";
+import config from "@/config";
 
 const getters = {
+    config: () => config,
     auth: state => state.auth,
     auth_params: state => state.auth_params,
     auth_required: state => state.auth_required,

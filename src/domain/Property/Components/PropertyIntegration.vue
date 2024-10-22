@@ -13,7 +13,7 @@
     <slot v-bind="{ integration }">
       <v-alert type="success" border="left" colored-border>
          Integration is set to {{ integration.title }}
-        <account-link :path="`/${property.business_id}/integrations`">Manage integration</account-link>
+        <account-link :path="`${property.business_id}/integrations`">Manage integration</account-link>
       </v-alert>
     </slot>
   </data-container>

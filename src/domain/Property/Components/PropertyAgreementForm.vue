@@ -1,7 +1,7 @@
 <template>
   <v-card flat :loading="loading">
     <slot name="header" />
-    <v-card-text>
+    <v-card-text class="pt-3">
       <v-form ref="form">
         <v-text-field
             outlined dense
