@@ -7,7 +7,7 @@
       class="primary" dark
       >
       <template v-slot:prepend>
-        <img src="@/assets/img/gr-logo-white.png" height="60px" class="ml-2 mt-3"/>
+        <img src="@/assets/img/hm_logo_white.png" height="50px" class="mt-3" style="margin-left: -12px;"/>
         <v-divider></v-divider>
       </template>
 
@@ -115,7 +115,7 @@ export default {
     name: "NavDrawer",
     data(){
         return {
-            appName: "Guest Registration",
+            appName: "Host Manager",
             currentNav: null
         }
     },
