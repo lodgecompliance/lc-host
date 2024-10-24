@@ -3,7 +3,7 @@
       <v-row justify="center">
         <v-col cols="12" sm="8" md="6" class="mt-2">
               <div class="d-flex align-center justify-center">
-                  <img src="../../../assets/img/logo.png" alt="Guest Registration Logo" width="80px" class="mx-2">
+                  <img src="../../../assets/img/logo.png" alt="Host Manager Logo" width="80px" class="mx-2">
                   <img src="../../../assets/img/zapier.png" alt="Zapier Logo" width="80px" class="mx-2">
               </div>
               <div class="text-center mb-5">
