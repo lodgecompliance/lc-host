@@ -19,6 +19,7 @@
   </data-container>
   <v-alert v-else type="error" border="left" colored-border>
       No integration set
+    <account-link :path="`${property.business_id}/integrations`">Manage integration</account-link>
   </v-alert>
 </template>
 
