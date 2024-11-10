@@ -46,6 +46,7 @@ const actions = {
             }).then(response => {
                 const user = response.data.getAuthUser;
                 const properties = user?.properties || [];
+                if(!properties.length) return dispatch('authenticate')
                 commit('SET_PROPERTIES', properties);
                 const lastActivePropertyId = window.localStorage.getItem('property');
                 let activeProperty = null;
@@ -104,7 +105,7 @@ const actions = {
     },
 
     authenticate({ commit, getters }) {
-        return LC.authenticate(getters.auth_params).then(({ token, profile }) => {
+        return LC.authenticate({ mode: 'host', ...getters.auth_params }).then(({ token, profile }) => {
             commit('SET_AUTH', { token, profile })
             return token.token
         })
