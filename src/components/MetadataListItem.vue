@@ -17,6 +17,7 @@
   </v-list-item>
 </template>
 
+
 <script>
     export default {
         name: "MetadataListItem",
