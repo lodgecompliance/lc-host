@@ -155,6 +155,17 @@
             </div>
           </v-col>
           <v-col cols="12" v-if="reservation" md="3">
+            <v-btn
+                outlined
+                class="my-3"
+                :loading="loading"
+                :disabled="!reservation"
+                color="primary"
+                block
+                @click="getReservation"
+            >
+              Click to Refresh Reservation
+            </v-btn>
             <reservation-sessions
                 :reservation="reservation"
                 @session-confirmed="getReservation"
@@ -258,7 +269,7 @@ export default {
         if(!this.reservation) return [];
         return [
           { key: "Booking Name", value: this.reservation.name, visible: true },
-          { key: "Account Name", value: this.$options.filters.nullable(this.reservation.user?.full_name), visible: this.reservation.user?.full_name.length > 0 },
+          { key: "Account Name", value: this.$options.filters.nullable(this.reservation.user?.full_name), visible: true },
           { key: "Email Address", value: this.$options.filters.nullable(this.reservation.email), visible: true },
           { key: "Phone Number", value: this.$options.filters.nullable(this.reservation.phone), visible: true },
           { key: "Checkin Date", value: this.checkinMoment.format('ll'), visible: true },
