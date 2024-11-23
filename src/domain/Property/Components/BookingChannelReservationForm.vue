@@ -48,27 +48,35 @@
           </template>
 
           <template v-if="fields.includes('instructions')">
-              <div class="my-3">
-                <template v-if="edit">
-                    <h4 class="mb-3">Instructions:</h4>
-                    <property-checkin-instruction-template-select
-                        :property="property"
-                        label="Select instruction to copy"
-                        return-object clearable
-                        @input="instructionTemplateSelected"
-                        dense
-                    />
-                    <v-textarea
-                        outlined
-                        label="Reservation instructions"
-                        v-model="form.instruction"
-                        @change="emitForm()"
-                        class="required"
-                        dense
-                    ></v-textarea>
-                </template>
-              </div>
-              <slot name="after-instructions" v-bind="form"  />
+            <h4>Instructions</h4>
+            <template v-if="!form.instructions || !form.instructions.length">
+              <p class="grey--text py-3">No instruction</p>
+            </template>
+
+            <property-checkin-instruction-template-select
+                item-text="title"
+                outlined
+                label="Instructions for checkin"
+                v-model="form.instructions"
+                :property="property"
+                multiple
+                return-object
+                small-chips
+                dense
+                :create-new="true"
+                :preview="true"
+                :changeable="edit"
+                @change="emitForm()"
+            >
+              <template v-if="edit" #list-item-content="{ instruction }">
+                <v-list-item-subtitle>
+                  <v-btn x-small text color="red" @click="form.instructions.splice(form.instructions.findIndex(a => a.id == instruction.id), 1)">
+                    <v-icon x-small>mdi-delete</v-icon> Remove
+                  </v-btn>
+                </v-list-item-subtitle>
+              </template>
+            </property-checkin-instruction-template-select>
+            <slot name="after-instructions" v-bind="form"  />
           </template>
 
           <template v-if="fields.includes('charges')">
@@ -356,13 +364,6 @@ export default {
     },
 
     methods: {
-
-        instructionTemplateSelected(template) {
-            if(!template) return;
-            this.form.instruction = this.form.instruction ? `${this.form.instruction}\n${template.body}` : `${template.body}`;
-            this.emitForm();
-        },
-
         chargesSelected(charges) {
             if(charges.length) this.form.require_credit_card = true;
             this.emitForm();
@@ -382,7 +383,7 @@ export default {
             if(form){
                 this.form = {
                     currency: form.currency,
-                    instruction: form.instruction,
+                    instructions: form.instructions,
                     charges: form.charges,
                     agreements: form.agreements,
                     questions: form.questions,
@@ -396,7 +397,7 @@ export default {
             } else {
                 this.form = {
                     currency: this.property.currency,
-                    instruction: null,
+                    instructions: [],
                     charges: [] ,
                     agreements: [],
                     questions: [],
@@ -431,13 +432,6 @@ export default {
                 this.setForm( default_config ? default_config.reservation_form : null);
             }
         },
-
-        // form: {
-        //     immediate: true,
-        //     handler(form) {
-        //         this.$emit('input', form);
-        //     }
-        // },
 
         paymentRequired: {
             immediate: true,
