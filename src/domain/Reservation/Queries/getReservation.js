@@ -121,6 +121,12 @@ export default gql`
                 text
             }
 
+            instructions {
+                id
+                title
+                body
+            }
+
             # Questions start
             questions {
                 id

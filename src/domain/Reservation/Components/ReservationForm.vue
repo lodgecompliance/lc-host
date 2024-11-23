@@ -206,10 +206,10 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
+              v-if="mode !== 'edit'"
               :disabled="booting"
               color="error"
               @click.prevent="confirmReservationCancel"
-              :loading="loading"
               depressed
           >
             Cancel Reservation
@@ -285,7 +285,7 @@ export default {
               email: null,
               checkin_date: null,
               checkout_date: null,
-              instruction: null,
+              instructions: [],
               charges: [] ,
               agreements: [],
               questions: [],
@@ -372,7 +372,7 @@ export default {
                     checkout_date: reservation.checkout_date,
 
                     currency: reservation.currency ? reservation.currency : (this.setting.payment_gateway === 'paystack' ? 'NGN' : this.property.currency),
-                    instruction: reservation.instruction,
+                    instructions: reservation.instructions,
                     charges: reservation.charges,
                     agreements: reservation.agreements,
                     questions: reservation.questions,
