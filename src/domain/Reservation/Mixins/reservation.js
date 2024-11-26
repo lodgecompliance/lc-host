@@ -159,7 +159,7 @@ export default {
         cancelReservation() {
             this.$store.commit('SNACKBAR', {
                 status: true,
-                text: `Cancelling ${this.reservation.name}'s reservation ${this.reservation.id}...`,
+                text: `Cancelling ${this.reservation.name}'s reservation...`,
                 color: "info",
                 timeout: -1
             })
@@ -173,7 +173,7 @@ export default {
                 if(cancellation) {
                     this.$store.commit('SNACKBAR', {
                         status: true,
-                        text: `${this.reservation.name}'s reservation ${this.reservation.id} cancelled successfully`,
+                        text: `${this.reservation.name}'s reservation cancelled successfully`,
                         color: "success"
                     })
                     this.$emit("reservation-updated", cancellation)
@@ -190,7 +190,7 @@ export default {
         deleteReservation() {
             this.$store.commit('SNACKBAR', {
                 status: true,
-                text: `Deleting ${this.reservation.name}'s reservation ${this.reservation.id}...`,
+                text: `Deleting ${this.reservation.name}'s reservation...`,
                 color: "info",
                 timeout: -1
             })

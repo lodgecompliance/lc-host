@@ -78,6 +78,25 @@
                   </v-expansion-panel>
                   <v-expansion-panel>
                     <v-expansion-panel-header>
+                      Instructions
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content class="pt-3">
+                      <v-list v-if="reservationInstructions.length">
+                        <template v-for="(instruction, i) in reservationInstructions">
+                          <property-instruction
+                              :key="`instruction-${i}`"
+                              :instruction="instruction"
+                          />
+                          <v-divider :key="`divider-${i}`" v-if="i < (reservationInstructions.length - 1)"></v-divider>
+                        </template>
+                      </v-list>
+                      <div v-else class="py-5 text-center grey--text">
+                        No instruction
+                      </div>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>
                       Agreements
                     </v-expansion-panel-header>
                     <v-expansion-panel-content class="pt-3">
@@ -213,6 +232,7 @@ import ReservationStatus from "@/domain/Reservation/Components/ReservationStatus
 import DataContainer from "@/components/DataContainer";
 import reservationMixin from "@/domain/Reservation/Mixins/reservation";
 import PropertyAgreement from "@/domain/Property/Components/PropertyAgreement";
+import PropertyInstruction from "@/domain/Property/Components/PropertyInstruction.vue";
 import ReservationTimeline from "@/domain/Reservation/Components/ReservationTimeline";
 import ReservationPayments from "@/domain/Reservation/Components/Payment/ReservationPayments";
 import UserIdentityVerification from "@/domain/User/Components/IdentityVerification";
@@ -230,7 +250,7 @@ export default {
     ReservationAdminOptions,
     SignaturePad,
     UserIdentityVerification,
-    ReservationPayments, ReservationTimeline, PropertyAgreement, DataContainer, ReservationStatus, Dashboard },
+    ReservationPayments, ReservationTimeline, PropertyAgreement, PropertyInstruction, DataContainer, ReservationStatus, Dashboard },
   data() {
     return {
       loading: false,
@@ -328,6 +348,9 @@ export default {
         }
       ]
     },
+    reservationInstructions() {
+      return this.reservation?.instructions || [];
+    },
     reservationAgreements() {
       return this.reservation?.agreements || [];
     },
@@ -402,6 +425,13 @@ export default {
                 timestamp {
                   created_at
                   updated_at
+                }
+
+                # Instructions start
+                instructions {
+                    id
+                    title
+                    body
                 }
 
                 # Agreements start

@@ -1,5 +1,8 @@
 <template>
     <v-card v-if="property" :loading="loading" flat>
+      <confirmation-dialog ref="confirmation" @confirmed="confirmation.action()">
+        {{ confirmation.text }}
+      </confirmation-dialog>
       <slot name="header" />
         <v-card-text class="pt-5">
           <v-form ref="form" @submit.prevent>
@@ -202,6 +205,15 @@
           </v-form>
         </v-card-text>
         <v-card-actions>
+          <v-btn
+              v-if="mode !== 'edit'"
+              :disabled="booting"
+              color="error"
+              @click.prevent="confirmReservationCancel"
+              depressed
+          >
+            Cancel Reservation
+          </v-btn>
             <v-spacer></v-spacer>
             <v-btn
                 :disabled="booting"
@@ -227,6 +239,7 @@ import CREATE_RESERVATION from '../Mutations/createReservation';
 import UPDATE_RESERVATION from '../Mutations/updateReservation';
 import GET_PROPERTY_RESERVATION_SETTING from '../../Property/Queries/getPropertyReservationSetting';
 import ErrorHandler from "@/components/ErrorHandler.vue";
+import ConfirmationDialog from "@/components/Utilities/ConfirmationDialog.vue";
 
 export default {
     name: "ReservationForm",
@@ -234,7 +247,8 @@ export default {
       ErrorHandler,
         DataContainer,
         BookingChannelSelect,
-        BookingChannelReservationForm
+        BookingChannelReservationForm,
+      ConfirmationDialog
     },
 
     defaultSetting: {},
@@ -252,10 +266,36 @@ export default {
                 init: null,
                 reservation: null
             },
+            confirmation: {
+              text: String,
+              action: Function
+            },
             editChannelConfig: false,
             channel: null,
             setting_channel_config: false,
             channelConfiguration: {},
+            defaultFormParameter: {
+              name: null,
+              room: null,
+              balance: 0,
+              currency: '',
+              booking_reference: null,
+              booking_channel: null,
+              phone: null,
+              email: null,
+              checkin_date: null,
+              checkout_date: null,
+              instructions: [],
+              charges: [] ,
+              agreements: [],
+              questions: [],
+              require_id_verification: false,
+              require_credit_card: false,
+              allow_additional_guest: null,
+              auto_checkin_approval: null,
+              send_checkin_mail: null,
+              checkin_mail: null,
+            }
         }
     },
     props: {
@@ -332,7 +372,7 @@ export default {
                     checkout_date: reservation.checkout_date,
 
                     currency: reservation.currency ? reservation.currency : (this.setting.payment_gateway === 'paystack' ? 'NGN' : this.property.currency),
-                    instruction: reservation.instruction,
+                    instructions: reservation.instructions,
                     charges: reservation.charges,
                     agreements: reservation.agreements,
                     questions: reservation.questions,
@@ -351,33 +391,48 @@ export default {
                 this.channelConfiguration.reservation_form = {};
                 Object.assign(this.channelConfiguration.reservation_form, this.form)
                 
-            }else{
-                this.form = {
-                    name: null,
-                    room: null,
-                    balance: 0,
-                    currency: this.setting.payment_gateway === 'paystack' ? 'NGN' : this.property.currency,
-                    booking_reference: null,
-                    booking_channel: null,
-                    phone: null,
-                    email: null,
-                    checkin_date: this.today,
-                    checkout_date: this.today,
-                    instruction: null,
-                    charges: [] ,
-                    agreements: [],
-                    questions: [],
-                    require_id_verification: false,
-                    require_credit_card: false, 
-                    allow_additional_guest: this.setting.allow_additional_guest,
-                    auto_checkin_approval: this.setting.auto_checkin_approval,
-                    send_checkin_mail: this.setting.send_checkin_mail,
-                    checkin_mail: this.setting.checkin_mail,
-                }
+            } else {
+                const formInitials = Object.assign({}, this.defaultFormParameter);
+                formInitials.currency = this.setting.payment_gateway === 'paystack' ? 'NGN' : this.property.currency;
+                formInitials.checkin_date = this.today;
+                formInitials.checkout_date = this.today;
+                formInitials.allow_additional_guest = this.setting.allow_additional_guest;
+                formInitials.auto_checkin_approval = this.setting.auto_checkin_approval;
+                formInitials.send_checkin_mail = this.setting.send_checkin_mail;
+                formInitials.checkin_mail = this.setting.checkin_mail;
+                this.form = formInitials;
             }
         },
 
-        submit(){         
+       confirmReservationCancel () {
+         this.confirmation = {
+           text: `Are you sure you want to clear and cancel reservation? `,
+           action: () => {
+             this.cancelReservation()
+           }
+         }
+         this.$refs.confirmation.open();
+       },
+
+      cancelReservation() {
+        const formInitials = Object.assign({}, this.defaultFormParameter);
+        formInitials.currency = this.setting.payment_gateway === 'paystack' ? 'NGN' : this.property.currency;
+        formInitials.checkin_date = this.today;
+        formInitials.checkout_date = this.today;
+        formInitials.allow_additional_guest = this.setting.allow_additional_guest;
+        formInitials.auto_checkin_approval = this.setting.auto_checkin_approval;
+        formInitials.send_checkin_mail = this.setting.send_checkin_mail;
+        formInitials.checkin_mail = this.setting.checkin_mail;
+        this.form = formInitials;
+        this.channel = null;
+        this.$store.commit('SNACKBAR', {
+          status: true,
+          text: 'Reservation form canceled and cleared!',
+          color: 'success'
+        });
+        this.$emit('reservation-canceled');
+      },
+      submit(){
             
             if(!this.$refs.form.validate()) {
                 this.$store.commit('SNACKBAR', {

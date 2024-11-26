@@ -10,6 +10,7 @@
           :property="property"
           :reservation="reservation"
           @reservation-created="close"
+          @reservation-canceled="close"
       >
         <template #header>
           <v-card-title>
@@ -25,7 +26,8 @@
 </template>
 
 <script>
-import ReservationForm from './ReservationForm.vue';export default {
+import ReservationForm from './ReservationForm.vue';
+export default {
     name: "ReservationFormDialog",
     components: {
        ReservationForm

@@ -244,12 +244,14 @@
 
             <v-expansion-panel>
               <v-expansion-panel-header expand-icon="mdi-menu-down">
-                <h4>Instruction</h4>
+                <h4>Instructions</h4>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <div class="text-center mt-5" v-if="reservation.instruction">
-                  {{reservation.instruction}}
-                </div>
+                <v-list v-if="reservation.instructions.length">
+                  <property-instruction
+                      v-for="(instruction, i) in reservation.instructions"
+                      :key="i" :instruction="instruction" />
+                </v-list>
                 <div class="text-center mt-5 grey--text" v-else>
                   No checkin instruction
                 </div>
@@ -432,6 +434,7 @@ import ReservationDocumentRequests from "@/domain/Reservation/Widgets/Reservatio
 import ReservationDocumentRequestHostOptions
   from "@/domain/Reservation/Components/ReservationDocumentRequestHostOptions.vue.vue";
 import UserIdentityVerification from "@/domain/User/Components/IdentityVerification.vue";
+import PropertyInstruction from "@/domain/Property/Components/PropertyInstruction.vue";
 
 export default {
     name: "PropertyReservationCheckin",
@@ -443,6 +446,7 @@ export default {
       ReservationPaymentRequestHostOptions,
       ReservationPaymentRequests,
       StripePaymentMethod,
+      PropertyInstruction,
       ReservationDamageHostOptions,
       ReservationDamages,
       DataContainer, ConfirmationDialog,

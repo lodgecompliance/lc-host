@@ -60,6 +60,7 @@ export default {
             loading: false,
             error: null,
             charges: [],
+            guests: [],
             selectedCharges: [],
             totalInstantCharges: 0,
             totalPreauthorizedCharges: 0,

@@ -81,7 +81,7 @@
                       <div class="py-3">
                         <div class="d-flex flex-wrap justify-space-between align-center">
                           <div class="flex-grow-1">
-                            <p class="grey--text">Guest Checkin URL</p>
+                            <p class="grey--text">  Guest Checkin URL</p>
                             <clip-board v-model="reservation.checkin_url" class="w-100" />
                           </div>
                           <convert-to-pdf v-bind="reservationPDF" class="mt-10" />
@@ -95,11 +95,18 @@
                       <div class="py-3">
                         <h3>Reservation Details</h3>
                         <v-list dense>
+                        <div v-for="meta in details" :key="meta.key">
+                          <div v-if="meta.hasOwnProperty('visible')">
+                            <metadata-list-item
+                                v-if="meta.visible === true"
+                                :metadata="meta"
+                                type="edge" />
+                          </div>
                           <metadata-list-item
-                              v-for="meta in details"
+                              v-else
                               :metadata="meta"
-                              type="edge"
-                              :key="meta.key" />
+                              type="edge"/>
+                        </div>
                           <metadata-list-item
                               :metadata="{}"
                               type="edge"
@@ -112,6 +119,24 @@
                             </template>
                           </metadata-list-item>
                         </v-list>
+<!--                        <v-list dense>-->
+<!--                          <metadata-list-item-->
+<!--                              v-for="meta in details"-->
+<!--                              :metadata="meta"-->
+<!--                              type="edge"-->
+<!--                              :key="meta.key" />-->
+<!--                          <metadata-list-item-->
+<!--                              :metadata="{}"-->
+<!--                              type="edge"-->
+<!--                          >-->
+<!--                            <template #content>-->
+<!--                              <div class="d-flex justify-space-between">-->
+<!--                                <v-list-item-subtitle class="grey&#45;&#45;text">Status</v-list-item-subtitle>-->
+<!--                                <reservation-status :reservation="reservation" />-->
+<!--                              </div>-->
+<!--                            </template>-->
+<!--                          </metadata-list-item>-->
+<!--                        </v-list>-->
                       </div>
                       <send-message v-if="reservation.active && hasPermissionToManageGuest" :reservation="reservation"> Send Guest Message </send-message>
 
@@ -130,6 +155,17 @@
             </div>
           </v-col>
           <v-col cols="12" v-if="reservation" md="3">
+            <v-btn
+                outlined
+                class="my-3"
+                :loading="loading"
+                :disabled="!reservation"
+                color="primary"
+                block
+                @click="getReservation"
+            >
+              Click to Refresh Reservation
+            </v-btn>
             <reservation-sessions
                 :reservation="reservation"
                 @session-confirmed="getReservation"
@@ -232,14 +268,14 @@ export default {
       details() {
         if(!this.reservation) return [];
         return [
-          { key: "Booking Name", value: this.reservation.name },
-          { key: "Account Name", value: this.$options.filters.nullable(this.reservation.user?.full_name) },
-          { key: "Email Address", value: this.$options.filters.nullable(this.reservation.email) },
-          { key: "Phone Number", value: this.$options.filters.nullable(this.reservation.phone) },
-          { key: "Checkin Date", value: this.checkinMoment.format('ll') },
-          { key: "Checkout Date", value: this.checkoutMoment.format('ll') },
-          { key: "Booking Channel", value: this.$options.filters.nullable(this.bookingChannel) },
-          { key: "Balance", value: this.$options.filters.money(this.reservation.balance,this.reservation.currency) },
+          { key: "Booking Name", value: this.reservation.name, visible: true },
+          { key: "Account Name", value: this.$options.filters.nullable(this.reservation.user?.full_name), visible: true },
+          { key: "Email Address", value: this.$options.filters.nullable(this.reservation.email), visible: true },
+          { key: "Phone Number", value: this.$options.filters.nullable(this.reservation.phone), visible: true },
+          { key: "Checkin Date", value: this.checkinMoment.format('ll'), visible: true },
+          { key: "Checkout Date", value: this.checkoutMoment.format('ll'), visible: true },
+          { key: "Booking Channel", value: this.$options.filters.nullable(this.bookingChannel), visible: true },
+          { key: "Balance", value: this.$options.filters.money(this.reservation.balance,this.reservation.currency), visible: this.reservation.balance > 0 },
         ]
       }
     },
