@@ -180,7 +180,7 @@
                 <h4>Questions</h4>
               </v-expansion-panel-header>
               <v-expansion-panel-content v-if="checkin" class="pt-3">
-                <v-list v-if="questions.length" dense>
+                <v-list v-if="questions && questions.length" dense>
                   <v-list-item v-for="(question, q) in questions" :key="q">
                     <v-list-item-icon>
                       <v-icon>mdi-account-question</v-icon>
@@ -231,7 +231,7 @@
                 <h4>Agreements</h4>
               </v-expansion-panel-header>
               <v-expansion-panel-content v-if="checkin" class="pt-3">
-                <v-list v-if="agreements.length">
+                <v-list v-if="agreements && agreements.length">
                   <property-agreement
                       v-for="(agreement, i) in agreements"
                       :key="i" :agreement="agreement" />
@@ -247,7 +247,7 @@
                 <h4>Instructions</h4>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <v-list v-if="reservation.instructions.length">
+                <v-list v-if="reservation.instructions && reservation.instructions.length">
                   <property-instruction
                       v-for="(instruction, i) in reservation.instructions"
                       :key="i" :instruction="instruction" />
